@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("NEIGHBOR") // ADMIN, PRESIDENT, NEIGHBOR
+  iban      String?  // IBAN for SEPA payments
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  community   Community? @relation(fields: [communityId], references: [id])
+  communityId String?
+
+  properties  Property[]
+  incidents   Incident[]
+  bookings    Booking[]
+  votes       VoteResponse[]
+  documents   Document[]
+}
+
+model Community {
+  id          String   @id @default(uuid())
+  name        String
+  address     String
+  bankAccount String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  properties  Property[]
+  accounts    Account[]
+  budgets     Budget[]
+  incidents   Incident[]
+  documents   Document[]
+  bookings    Booking[]
+  votes       Vote[]
+  spaces      Space[]
+}
+
+model Property {
+  id          String  @id @default(uuid())
+  unit        String  // e.g., "3ºA"
+  floor       Int
+  coefficient Float   @default(1.0) // Coeficiente de participación
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  owners      User[]
+
+  @@unique([communityId, unit])
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  name      String
+  type      String   // BANK, CASH
+  balance   Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  community    Community     @relation(fields: [communityId], references: [id])
+  communityId  String
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  amount      Float
+  type        String          // INCOME, EXPENSE
+  category    String
+  description String?
+  date        DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+}
+
+model Budget {
+  id          String   @id @default(uuid())
+  year        Int
+  totalAmount Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  @@unique([communityId, year])
+}
+
+model Incident {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  status      String         @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  photos      String?        // JSON array of URLs
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  reportedBy   User   @relation(fields: [reportedById], references: [id])
+  reportedById String
+}
+
+model Document {
+  id          String           @id @default(uuid())
+  name        String
+  url         String
+  category    String           @default("OTHER") // ACTA, CONTRATO, FACTURA, POLIZA, OTHER
+  uploadedAt  DateTime         @default(now())
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedById String
+}
+
+model Space {
+  id          String   @id @default(uuid())
+  name        String   // e.g., "Pista de Pádel 1"
+  description String?
+  createdAt   DateTime @default(now())
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  bookings Booking[]
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  date      DateTime
+  startTime String   // e.g., "18:00"
+  endTime   String   // e.g., "20:00"
+  createdAt DateTime @default(now())
+
+  space   Space  @relation(fields: [spaceId], references: [id])
+  spaceId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+}
+
+model Vote {
+  id          String   @id @default(uuid())
+  question    String
+  description String?
+  options     String   // JSON array of options
+  deadline    DateTime
+  createdAt   DateTime @default(now())
+
+  community   Community      @relation(fields: [communityId], references: [id])
+  communityId String
+  responses   VoteResponse[]
+}
+
+model VoteResponse {
+  id        String   @id @default(uuid())
+  option    String
+  createdAt DateTime @default(now())
+
+  vote   Vote   @relation(fields: [voteId], references: [id])
+  voteId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([voteId, userId])
+}
