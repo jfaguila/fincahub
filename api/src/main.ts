@@ -1,8 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-// Main entry point - Fincahub API (Re-deploying with fix)
+// Main entry point - Fincahub API (Build triggered: 2026-01-26_v2)
 async function bootstrap() {
+  console.log('🚀 Starting Fincahub API...');
+  console.log('Environment:', process.env.NODE_ENV);
+  console.log('Port:', process.env.PORT);
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [

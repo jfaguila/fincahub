@@ -3,6 +3,6 @@ builder = "nixpacks"
 watchPatterns = ["src/**", "prisma/**", "package.json"]
 
 [deploy]
-startCommand = "npx prisma migrate deploy && npm run start:prod"
+startCommand = "npm run start:prod"
 healthcheckPath = "/"
 restartPolicyType = "on_failure"
