@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-// Main entry point - Fincahub API (Build triggered: 2026-01-26_v2)
+// Main entry point - Fincahub API (Debug: no healthcheck)
 async function bootstrap() {
   console.log('🚀 Starting Fincahub API...');
   console.log('Environment:', process.env.NODE_ENV);
