@@ -4,5 +4,4 @@ buildCommand = "npm install && npm run build"
 watchPatterns = ["src/**", "prisma/**", "package.json"]
 
 [deploy]
-startCommand = "cd api && npm run start:prod"
 restartPolicyType = "on_failure"
