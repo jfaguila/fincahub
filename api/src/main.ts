@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-// Main entry point - Fincahub API
+// Main entry point - Fincahub API (Stable)
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
