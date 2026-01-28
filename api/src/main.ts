@@ -1,11 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-// Main entry point - Fincahub API (Fix: railway.toml startCommand)
+// Main entry point - Fincahub API
 async function bootstrap() {
-  console.log('🚀 Starting Fincahub API...');
-  console.log('Environment:', process.env.NODE_ENV);
-  console.log('Port:', process.env.PORT);
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [

@@ -8,4 +8,4 @@ cmds = ['cd api && npm install']
 cmds = ['cd api && npm run build']
 
 [start]
-cmd = 'cd api && echo "CWD is $(pwd)" && ls -la && echo "Listing dist:" && ls -la dist && npm run start:prod'
+cmd = 'cd api && npm run start:prod'

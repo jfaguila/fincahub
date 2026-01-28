@@ -5,4 +5,5 @@ watchPatterns = ["src/**", "prisma/**", "package.json"]
 
 [deploy]
 startCommand = "cd api && npm run start:prod"
+healthcheckPath = "/"
 restartPolicyType = "on_failure"
