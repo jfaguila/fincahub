@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function DashboardLayout({
     children,
@@ -64,7 +65,9 @@ export default function DashboardLayout({
                     </div>
                 </header>
                 <main className="flex-1 p-6 md:p-8">
-                    {children}
+                    <AuthGuard>
+                        {children}
+                    </AuthGuard>
                 </main>
             </div>
         </div>

@@ -26,6 +26,10 @@ export default function LoginPage() {
                 const data = await res.json();
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Also set token in cookies for middleware
+                document.cookie = `token=${data.token}; path=/; max-age=3600; secure; samesite=strict`;
+                
                 // Force redirect to dashboard
                 router.push('/dashboard');
                 router.refresh();
