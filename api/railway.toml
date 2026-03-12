@@ -4,4 +4,5 @@ buildCommand = "npm install && npm run build"
 watchPatterns = ["src/**", "prisma/**", "package.json"]
 
 [deploy]
+startCommand = "npx prisma db push && node dist/src/main"
 restartPolicyType = "on_failure"
