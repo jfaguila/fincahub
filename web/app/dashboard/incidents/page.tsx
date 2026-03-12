@@ -24,7 +24,7 @@ export default function IncidentsPage() {
 
     const fetchIncidents = async () => {
         try {
-            const res = await fetch('${API_URL}/incidents', {
+            const res = await fetch(`${API_URL}/incidents`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (res.ok) setIncidents(await res.json());
@@ -37,7 +37,7 @@ export default function IncidentsPage() {
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('${API_URL}/incidents', {
+            const res = await fetch(`${API_URL}/incidents`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
