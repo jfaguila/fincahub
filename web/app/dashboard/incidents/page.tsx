@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { API_URL } from '../../../lib/api';
 
 // Types
 interface Incident {
@@ -23,7 +24,7 @@ export default function IncidentsPage() {
 
     const fetchIncidents = async () => {
         try {
-            const res = await fetch('http://localhost:3001/incidents', {
+            const res = await fetch('${API_URL}/incidents', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (res.ok) setIncidents(await res.json());
@@ -36,7 +37,7 @@ export default function IncidentsPage() {
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:3001/incidents', {
+            const res = await fetch('${API_URL}/incidents', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ export default function IncidentsPage() {
 
     const handleDelete = async (id: string) => {
         if (!confirm('¿Borrar incidencia?')) return;
-        await fetch(`http://localhost:3001/incidents/${id}`, {
+        await fetch(`${API_URL}/incidents/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
@@ -63,7 +64,7 @@ export default function IncidentsPage() {
     };
 
     const handleStatus = async (id: string, newStatus: string) => {
-        await fetch(`http://localhost:3001/incidents/${id}/status`, {
+        await fetch(`${API_URL}/incidents/${id}/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

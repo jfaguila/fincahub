@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { API_URL } from '../../../lib/api';
 
 interface Document {
     id: string;
@@ -22,7 +23,7 @@ export default function DocumentsPage() {
 
     const fetchDocs = async () => {
         try {
-            const res = await fetch('http://localhost:3001/documents', {
+            const res = await fetch(`${API_URL}/documents`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (res.ok) setDocuments(await res.json());
@@ -48,7 +49,7 @@ export default function DocumentsPage() {
         // Mock upload using JSON for this demo environment (since we don't have real file upload backend setup yet perfectly for multipart in the simplified controller)
         // We will simulate the metadata creation.
 
-        const res = await fetch('http://localhost:3001/documents/upload', {
+        const res = await fetch(`${API_URL}/documents/upload`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ export default function DocumentsPage() {
 
     const handleDelete = async (id: string, name: string) => {
         if (!confirm(`¿Borrar ${name}?`)) return;
-        const res = await fetch(`http://localhost:3001/documents/${id}`, {
+        const res = await fetch(`${API_URL}/documents/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });

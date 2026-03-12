@@ -26,7 +26,6 @@ export class DocumentsController {
 
     @Post('upload')
     async uploadDocument(@Body() body: { name: string; category: string; isSmartUpload?: boolean }, @Request() req: any) {
-        console.log('Upload Document Request:', body);
         const communityId = req.user.communityId || 'default';
         const userId = req.user.userId;
 
@@ -47,7 +46,6 @@ export class DocumentsController {
 
             if (accounts.length === 0) {
                 // Create a default account if none exists
-                console.log('No accounts found. Creating Default Account...');
                 const defaultAccount = await this.accountingService.createAccount(communityId, 'Cuenta Principal', 'BANK', 0);
                 targetAccountId = defaultAccount.id;
             } else {

@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '../../lib/api';
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('presidente@fincahub.com'); // Pre-fill for easy testing
-    const [password, setPassword] = useState('password123');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function LoginPage() {
         setError('');
 
         try {
-            const res = await fetch('http://localhost:3001/auth/login', {
+            const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -38,7 +39,7 @@ export default function LoginPage() {
             }
         } catch (err) {
             console.error(err);
-            setError('Error de conexión con el servidor (Backend en puerto 3001?)');
+            setError('Error de conexión con el servidor. Inténtelo de nuevo.');
         } finally {
             setLoading(false);
         }
@@ -93,10 +94,6 @@ export default function LoginPage() {
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-xs text-gray-500">
-                    <p>Credenciales Demo:</p>
-                    <p>presidente@fincahub.com / password123</p>
-                </div>
             </div>
         </div>
     );

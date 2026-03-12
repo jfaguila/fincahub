@@ -1,51 +1,81 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { API_URL } from '../../../lib/api';
 
-// Types
+interface Space {
+    id: string;
+    name: string;
+    description?: string;
+}
+
+// Backend returns: { id, date, startTime, endTime, space: {name}, user: {name} }
 interface Booking {
     id: string;
+    date: string;
     startTime: string;
     endTime: string;
-    user: { name: string; };
+    space: { name: string };
+    user: { name: string };
 }
 
 export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([]);
+    const [spaces, setSpaces] = useState<Space[]>([]);
 
     // Form
     const [showForm, setShowForm] = useState(false);
+    const [selectedSpaceId, setSelectedSpaceId] = useState('');
     const [date, setDate] = useState('');
     const [startTime, setStartTime] = useState('10:00');
     const [duration, setDuration] = useState('1');
 
+    const getAuthHeaders = () => ({
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
     const fetchBookings = async () => {
         try {
-            const res = await fetch('http://localhost:3001/bookings', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-            });
+            const res = await fetch(`${API_URL}/bookings`, { headers: getAuthHeaders() });
             if (res.ok) setBookings(await res.json());
         } catch (e) { }
     };
 
-    useEffect(() => { fetchBookings(); }, []);
+    const fetchSpaces = async () => {
+        try {
+            const res = await fetch(`${API_URL}/bookings/spaces`, { headers: getAuthHeaders() });
+            if (res.ok) {
+                const data = await res.json();
+                setSpaces(data);
+                if (data.length > 0) setSelectedSpaceId(data[0].id);
+            }
+        } catch (e) { }
+    };
+
+    useEffect(() => {
+        fetchBookings();
+        fetchSpaces();
+    }, []);
 
     const handleBooking = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Construct date objects
-        const start = new Date(`${date}T${startTime}:00`);
-        const end = new Date(start.getTime() + parseInt(duration) * 60 * 60 * 1000);
+        if (!selectedSpaceId) { alert('Selecciona un espacio'); return; }
 
-        const res = await fetch('http://localhost:3001/bookings', {
+        // Calculate end time from start time + duration
+        const [hours, minutes] = startTime.split(':').map(Number);
+        const durationHours = parseFloat(duration);
+        const endHours = hours + Math.floor(durationHours);
+        const endMinutes = minutes + Math.round((durationHours % 1) * 60);
+        const endTime = `${String(endHours + Math.floor(endMinutes / 60)).padStart(2, '0')}:${String(endMinutes % 60).padStart(2, '0')}`;
+
+        const res = await fetch(`${API_URL}/bookings`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
             body: JSON.stringify({
-                spaceId: 'space-1-padel', // Hardcoded for demo if space logic is complex
-                startTime: start.toISOString(),
-                endTime: end.toISOString()
+                spaceId: selectedSpaceId,
+                date,
+                startTime,
+                endTime,
             })
         });
 
@@ -53,15 +83,15 @@ export default function BookingsPage() {
             setShowForm(false);
             fetchBookings();
         } else {
-            alert('Error: Espacio ya reservado o conflicto de horario');
+            alert('Error: Espacio ya reservado en ese horario.');
         }
     };
 
     const handleDelete = async (id: string) => {
         if (!confirm('¿Cancelar reserva?')) return;
-        await fetch(`http://localhost:3001/bookings/${id}`, {
+        await fetch(`${API_URL}/bookings/${id}`, {
             method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            headers: getAuthHeaders()
         });
         fetchBookings();
     };
@@ -74,14 +104,26 @@ export default function BookingsPage() {
                     onClick={() => setShowForm(!showForm)}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold shadow-lg"
                 >
-                    {showForm ? 'Cancelar' : '+ Reservar Pista'}
+                    {showForm ? 'Cancelar' : '+ Reservar Espacio'}
                 </button>
             </div>
 
             {showForm && (
                 <form onSubmit={handleBooking} className="mb-8 bg-white/10 p-6 rounded-xl border border-white/20">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                        <div className="col-span-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Espacio</label>
+                            <select
+                                className="w-full p-3 rounded bg-black/30 border border-white/10 text-white"
+                                value={selectedSpaceId} onChange={e => setSelectedSpaceId(e.target.value)}
+                                required
+                            >
+                                {spaces.map(s => (
+                                    <option key={s.id} value={s.id}>{s.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
                             <label className="block text-sm text-gray-400 mb-1">Día</label>
                             <input
                                 type="date"
@@ -100,7 +142,7 @@ export default function BookingsPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Duración (h)</label>
+                            <label className="block text-sm text-gray-400 mb-1">Duración</label>
                             <select
                                 className="w-full p-3 rounded bg-black/30 border border-white/10 text-white"
                                 value={duration} onChange={e => setDuration(e.target.value)}
@@ -120,6 +162,7 @@ export default function BookingsPage() {
                 <table className="w-full text-left">
                     <thead className="border-b border-white/20">
                         <tr>
+                            <th className="p-4 text-slate-300">Espacio</th>
                             <th className="p-4 text-slate-300">Usuario</th>
                             <th className="p-4 text-slate-300">Fecha</th>
                             <th className="p-4 text-slate-300">Horario</th>
@@ -127,24 +170,28 @@ export default function BookingsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {bookings.map(booking => {
-                            const start = new Date(booking.startTime);
-                            const end = new Date(booking.endTime);
-                            return (
-                                <tr key={booking.id} className="border-b border-white/10 hover:bg-white/5 transition-colors">
-                                    <td className="p-4 text-gray-300">{booking.user?.name}</td>
-                                    <td className="p-4 text-gray-400">{start.toLocaleDateString('es-ES')}</td>
-                                    <td className="p-4">
-                                        <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs border border-emerald-500/30">
-                                            {start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} - {end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    </td>
-                                    <td className="p-4 text-right">
-                                        <button onClick={() => handleDelete(booking.id)} className="text-red-400 hover:text-red-300">Cancel</button>
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                        {bookings.map(booking => (
+                            <tr key={booking.id} className="border-b border-white/10 hover:bg-white/5 transition-colors">
+                                <td className="p-4 text-white font-medium">{booking.space?.name}</td>
+                                <td className="p-4 text-gray-300">{booking.user?.name}</td>
+                                <td className="p-4 text-gray-400">
+                                    {new Date(booking.date).toLocaleDateString('es-ES')}
+                                </td>
+                                <td className="p-4">
+                                    <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs border border-emerald-500/30">
+                                        {booking.startTime} - {booking.endTime}
+                                    </span>
+                                </td>
+                                <td className="p-4 text-right">
+                                    <button onClick={() => handleDelete(booking.id)} className="text-red-400 hover:text-red-300 text-sm">Cancelar</button>
+                                </td>
+                            </tr>
+                        ))}
+                        {bookings.length === 0 && (
+                            <tr>
+                                <td colSpan={5} className="p-8 text-center text-gray-400">No hay reservas registradas.</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>

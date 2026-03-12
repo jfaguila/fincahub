@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { API_URL } from '../../../lib/api';
 
 // Types
 interface Neighbor {
@@ -30,8 +31,8 @@ export default function NeighborsPage() {
 
             // Parallel fetch: Neighbors + Debtors
             const [resNeighbors, resDebtors] = await Promise.all([
-                fetch('http://localhost:3001/community/neighbors', { headers }),
-                fetch('http://localhost:3001/accounting/debt', { headers })
+                fetch(`${API_URL}/community/neighbors`, { headers }),
+                fetch(`${API_URL}/accounting/debt`, { headers })
             ]);
 
             if (resNeighbors.ok && resDebtors.ok) {
@@ -55,7 +56,7 @@ export default function NeighborsPage() {
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:3001/community/neighbors', {
+            const res = await fetch(`${API_URL}/community/neighbors`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

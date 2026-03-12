@@ -82,41 +82,61 @@ export class AccountingService {
         });
     }
 
-    // --- Debtors (Simplified) ---
+    // --- Debtors (based on real transactions) ---
     async getDebtors(communityId: string) {
-        // 1. Get all neighbors
+        // Get all neighbors with their properties
         const neighbors = await this.prisma.user.findMany({
             where: { communityId, role: 'NEIGHBOR' },
             include: { properties: true }
         });
 
+        // Get total income by user (payments received from neighbors)
+        // In this model, debtors are neighbors with no INCOME transactions linked to them
+        // We compare expected quota (budget / neighbors) vs actual payments
+        const budget = await this.prisma.budget.findFirst({
+            where: { communityId, year: new Date().getFullYear() }
+        });
+
+        const totalBudget = budget?.totalAmount ?? 0;
+        const monthlyQuota = neighbors.length > 0 ? totalBudget / 12 / neighbors.length : 0;
+        const currentMonth = new Date().getMonth() + 1;
+
+        // Get accounts for this community
+        const accounts = await this.prisma.account.findMany({ where: { communityId } });
+        const accountIds = accounts.map((a: { id: string }) => a.id);
+
+        // Get income transactions for the current year grouped by month
+        const currentYear = new Date().getFullYear();
+        const incomeTransactions = await this.prisma.transaction.findMany({
+            where: {
+                accountId: { in: accountIds },
+                type: 'INCOME',
+                category: { contains: 'Cuota' },
+                date: {
+                    gte: new Date(currentYear, 0, 1),
+                    lte: new Date()
+                }
+            }
+        });
+
+        // Calculate how many quota months have been collected
+        const monthsCollected = monthlyQuota > 0
+            ? Math.round(incomeTransactions.reduce((sum: number, t: { amount: number }) => sum + t.amount, 0) / (monthlyQuota * neighbors.length))
+            : 0;
+
         const debtors = [];
-        const currentMonth = new Date().getMonth() + 1; // 1-12
 
         for (const neighbor of neighbors) {
-            // Mock Logic: 
-            // Expected contribution = Month * 50
-            // Paid = Depends on userId hash to be consistent but "random" per user
-            const hash = neighbor.id.charCodeAt(0) + neighbor.id.charCodeAt(neighbor.id.length - 1);
-            const isGoodPayer = hash % 3 !== 0; // 2/3 are good payers
+            // A neighbor is considered a debtor if the community has fewer months collected than expected
+            const monthsOverdue = Math.max(0, currentMonth - monthsCollected);
 
-            let debtAmount = 0;
-            let monthsOverdue = 0;
-
-            if (!isGoodPayer) {
-                // Bad payer
-                const missingMonths = (hash % 6) + 1; // 1 to 6 months overdue
-                debtAmount = missingMonths * 50.00;
-                monthsOverdue = missingMonths;
-            }
-
-            if (debtAmount > 0) {
+            if (monthsOverdue > 0 && monthlyQuota > 0) {
                 debtors.push({
                     id: neighbor.id,
                     name: neighbor.name,
                     email: neighbor.email,
                     unit: neighbor.properties[0]?.unit || 'S/N',
-                    debtAmount,
+                    debtAmount: Number((monthsOverdue * monthlyQuota).toFixed(2)),
                     monthsOverdue
                 });
             }

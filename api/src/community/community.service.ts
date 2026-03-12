@@ -37,12 +37,10 @@ export class CommunityService {
 
     async createNeighbor(communityId: string, name: string, email: string, role: string = 'NEIGHBOR', unit?: string, iban?: string) {
         // Log input for debugging
-        console.log(`[CreateNeighbor] Starting creation for: ${email}, unit: ${unit}, iban: ${iban}`);
 
         try {
             const existingUser = await this.prisma.user.findUnique({ where: { email } });
             if (existingUser) {
-                console.warn(`[CreateNeighbor] User already exists: ${email}`);
                 throw new BadRequestException('El usuario con este email ya existe.');
             }
 
@@ -58,7 +56,6 @@ export class CommunityService {
                     iban, // Save IBAN
                 },
             });
-            console.log(`[CreateNeighbor] User created with ID: ${user.id}`);
 
             if (unit) {
                 // Check if property exists first to avoid duplicate unit errors if unique constraint exists
@@ -75,7 +72,6 @@ export class CommunityService {
                             }
                         }
                     });
-                    console.log(`[CreateNeighbor] Property created: ${unit}`);
                 } catch (propError) {
                     console.error(`[CreateNeighbor] Property creation failed for unit ${unit}:`, propError);
                     // Don't fail the whole user creation if property fails, but log it
