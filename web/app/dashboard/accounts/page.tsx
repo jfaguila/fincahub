@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { API_URL } from '../../../lib/api';
 
 interface Account { id: string; name: string; type: string; balance: number; }
 interface Transaction { id: string; date: string; amount: number; type: string; category: string; description: string; }
@@ -25,7 +26,7 @@ export default function AccountsPage() {
 
     const fetchData = async () => {
         try {
-            const accRes = await fetch('http://localhost:3001/accounting/accounts', {
+            const accRes = await fetch(`${API_URL}/accounting/accounts`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (accRes.ok) {
@@ -40,7 +41,7 @@ export default function AccountsPage() {
     };
 
     const fetchTx = async (accId: string) => {
-        const txRes = await fetch(`http://localhost:3001/accounting/transactions?accountId=${accId}`, {
+        const txRes = await fetch(`${API_URL}/accounting/transactions?accountId=${accId}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         if (txRes.ok) setTransactions(await txRes.json());
@@ -53,7 +54,7 @@ export default function AccountsPage() {
         e.preventDefault();
         if (!selectedAccount) return;
 
-        const res = await fetch('http://localhost:3001/accounting/transactions', {
+        const res = await fetch(`${API_URL}/accounting/transactions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export default function AccountsPage() {
     const handleGenerateSepa = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:3001/accounting/sepa-xml', {
+            const res = await fetch(`${API_URL}/accounting/sepa-xml`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,7 +120,7 @@ export default function AccountsPage() {
     const handleCalculateSettlement = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch(`http://localhost:3001/accounting/settlement?year=${settlementYear}`, {
+            const res = await fetch(`${API_URL}/accounting/settlement?year=${settlementYear}`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (res.ok) {
