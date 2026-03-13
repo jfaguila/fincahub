@@ -88,18 +88,55 @@ export default function NeighborsPage() {
 
     const handleClaim = (neighbor: Neighbor) => {
         if (!neighbor.debt) return;
-        const msg = `
-⚖️ GENERANDO RECLAMACIÓN JUDICIAL (SIMULACIÓN)
-==============================================
-Deudor: ${neighbor.name}
-Propiedad: ${neighbor.properties?.[0]?.unit || 'S/N'}
-Importe Pendiente: ${neighbor.debt.amount.toFixed(2)}€ (${neighbor.debt.months} meses)
+        const today = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+        const unit = neighbor.properties?.[0]?.unit || 'S/N';
+        const letter = `
+            <html>
+            <head>
+              <title>Reclamación de Deuda - ${neighbor.name}</title>
+              <style>
+                body { font-family: Arial, sans-serif; max-width: 700px; margin: 60px auto; color: #222; line-height: 1.7; font-size: 14px; }
+                h2 { text-align: center; text-transform: uppercase; font-size: 16px; margin-bottom: 30px; }
+                .ref { text-align: right; color: #555; margin-bottom: 30px; }
+                p { margin-bottom: 12px; }
+                .firma { margin-top: 60px; }
+                @media print { button { display: none; } }
+              </style>
+            </head>
+            <body>
+              <h2>Reclamación de Deuda de Gastos de Comunidad</h2>
+              <div class="ref">
+                <p>Fecha: ${today}</p>
+                <p>Ref: RECLAM-${Date.now().toString().slice(-6)}</p>
+              </div>
+              <p><strong>A:</strong> ${neighbor.name}<br/>
+              Propietario/a de la vivienda <strong>${unit}</strong><br/>
+              Comunidad de Propietarios Residencial Las Palmeras</p>
 
-¿Confirmar generación de Burofax y cargo de tasas (30.00€)?
+              <p>Estimado/a vecino/a,</p>
+
+              <p>Por medio de la presente, nos dirigimos a usted en calidad de Presidente/a de la Comunidad de Propietarios, para comunicarle que, según nuestros registros, existe una deuda pendiente de pago correspondiente a las cuotas de comunidad por un importe total de <strong>${neighbor.debt!.amount.toFixed(2)} €</strong> (${neighbor.debt!.months} cuotas impagadas).</p>
+
+              <p>En virtud del artículo 21 de la Ley de Propiedad Horizontal, le requerimos el pago de dicha cantidad en el plazo de <strong>15 días naturales</strong> desde la recepción de este escrito.</p>
+
+              <p>En caso de no atender este requerimiento, la Comunidad se verá obligada a iniciar las acciones legales oportunas para el cobro de la deuda, con los gastos e intereses que ello conlleve, que serán igualmente a su cargo.</p>
+
+              <p>Confiamos en su colaboración para resolver esta situación de forma amistosa.</p>
+
+              <div class="firma">
+                <p>Atentamente,</p>
+                <br/><br/>
+                <p>___________________________<br/>
+                El/La Presidente/a de la Comunidad<br/>
+                Residencial Las Palmeras</p>
+              </div>
+              <br/>
+              <button onclick="window.print()" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;">🖨️ Imprimir / Guardar como PDF</button>
+            </body>
+            </html>
         `;
-        if (confirm(msg)) {
-            alert('✅ Burofax enviado exitosamente a Correos Online.\nSe ha generado el cargo administrativo.');
-        }
+        const win = window.open('', '_blank');
+        if (win) { win.document.write(letter); win.document.close(); }
     };
 
     if (loading) return <div className="p-8 text-white">Cargando...</div>;

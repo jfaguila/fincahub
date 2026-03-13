@@ -10,6 +10,9 @@ import { IncidentsModule } from './incidents/incidents.module';
 import { DocumentsModule } from './documents/documents.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { VotingModule } from './voting/voting.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
+import { MeetingsModule } from './meetings/meetings.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { VotingModule } from './voting/voting.module';
     DocumentsModule,
     BookingsModule,
     VotingModule,
+    AnnouncementsModule,
+    MeetingsModule,
+    BillingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

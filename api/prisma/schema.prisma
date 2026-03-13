@@ -23,11 +23,13 @@ model User {
   community   Community? @relation(fields: [communityId], references: [id])
   communityId String?
 
-  properties  Property[]
-  incidents   Incident[]
-  bookings    Booking[]
-  votes       VoteResponse[]
-  documents   Document[]
+  properties    Property[]
+  incidents     Incident[]
+  bookings      Booking[]
+  votes         VoteResponse[]
+  documents     Document[]
+  announcements Announcement[]
+  meetings      Meeting[]
 }
 
 model Community {
@@ -38,15 +40,17 @@ model Community {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users       User[]
-  properties  Property[]
-  accounts    Account[]
-  budgets     Budget[]
-  incidents   Incident[]
-  documents   Document[]
-  bookings    Booking[]
-  votes       Vote[]
-  spaces      Space[]
+  users         User[]
+  properties    Property[]
+  accounts      Account[]
+  budgets       Budget[]
+  incidents     Incident[]
+  documents     Document[]
+  bookings      Booking[]
+  votes         Vote[]
+  spaces        Space[]
+  announcements Announcement[]
+  meetings      Meeting[]
 }
 
 model Property {
@@ -159,6 +163,39 @@ model Booking {
 
   community   Community @relation(fields: [communityId], references: [id])
   communityId String
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  pinned      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+}
+
+model Meeting {
+  id        String   @id @default(uuid())
+  title     String
+  type      String   @default("ORDINARY") // ORDINARY | EXTRAORDINARY
+  date      DateTime
+  location  String
+  agenda    String
+  minutes   String?
+  status    String   @default("SCHEDULED") // SCHEDULED | COMPLETED | CANCELLED
+  createdAt DateTime @default(now())
+
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId String
+
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String
 }
 
 model Vote {

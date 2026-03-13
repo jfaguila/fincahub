@@ -41,6 +41,12 @@ export default function DashboardLayout({
                     <Link href="/dashboard/voting" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                         <span>🗳️</span> Votaciones
                     </Link>
+                    <Link href="/dashboard/announcements" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                        <span>📢</span> Anuncios
+                    </Link>
+                    <Link href="/dashboard/meetings" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                        <span>📋</span> Juntas
+                    </Link>
                 </nav>
 
                 <div className="p-4 border-t border-white/10">
