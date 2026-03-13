@@ -9,8 +9,10 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      process.env.FRONTEND_URL || 'https://fincahub-web.vercel.app',
-    ],
+      'https://fincahub.vercel.app',
+      'https://fincahub-jw9yc3lnb-jorge-fabregas-projects.vercel.app',
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
     credentials: true,
   });
   await app.listen(process.env.PORT || 3001);
