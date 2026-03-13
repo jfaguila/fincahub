@@ -26,13 +26,13 @@ export class BillingController {
         // Dynamic import to avoid crash when stripe is not installed
         try {
             const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-01-27.acacia' });
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' });
 
             const session = await stripe.checkout.sessions.create({
                 mode: 'subscription',
                 payment_method_types: ['card'],
                 line_items: [{ price: PRICE_IDS[body.plan] || PRICE_IDS.basic, quantity: 1 }],
-                trial_period_days: 30,
+                subscription_data: { trial_period_days: 30 },
                 success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard?plan=activated`,
                 cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/#pricing`,
                 customer_email: req.user.email,
