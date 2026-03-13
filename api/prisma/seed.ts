@@ -6,6 +6,13 @@ const prisma = new PrismaClient();
 async function main() {
     console.log('Starting seed...');
 
+    // Skip if already seeded
+    const existing = await prisma.user.findUnique({ where: { email: 'presidente@fincahub.com' } });
+    if (existing) {
+        console.log('Database already seeded, skipping...');
+        return;
+    }
+
     // Create default community
     const community = await prisma.community.upsert({
         where: { id: 'default' },
@@ -218,7 +225,7 @@ async function main() {
             question: '¿Aprueba el presupuesto para 2026?',
             description: 'Votación sobre el presupuesto comunitario',
             options: JSON.stringify(['A favor', 'En contra', 'Abstención']),
-            deadline: new Date('2026-02-28'),
+            deadline: new Date('2027-12-31'),
             communityId: community.id,
         },
     });
