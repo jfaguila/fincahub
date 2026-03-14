@@ -3,6 +3,7 @@ import { DocumentsService } from './documents.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthRequest } from '../common/auth-request.interface';
 import { AccountingService } from '../accounting/accounting.service';
+import { AiProcessorService } from './ai-processor.service';
 
 export class UploadDocumentDto {
     name: string;
@@ -15,7 +16,8 @@ export class UploadDocumentDto {
 export class DocumentsController {
     constructor(
         private readonly documentsService: DocumentsService,
-        private readonly accountingService: AccountingService // Inject accounting service
+        private readonly accountingService: AccountingService,
+        private readonly aiProcessor: AiProcessorService,
     ) { }
 
     @Get()
@@ -29,23 +31,20 @@ export class DocumentsController {
         const communityId = req.user.communityId || 'default';
         const userId = req.user.userId;
 
-        // Save document
         const doc = await this.documentsService.uploadDocument(communityId, userId, body.name, 'http://placeholder.url', body.category);
 
         let autoCreatedTransaction = null;
-        if (body.isSmartUpload && body.category === 'FACTURA') {
-            // --- AI SIMULATION ---
-            // In a real app, this would use a Python Service or OCR API
-            const simulatedAmount = parseFloat((Math.random() * 200 + 50).toFixed(2)); // Random amount between 50 and 250
-            const simulatedProvider = body.name.split('.')[0] || 'Proveedor Desconocido';
+        let aiAnalysis = null;
 
-            // Auto-create expense
-            // Need a default account. Find first account.
+        if (body.isSmartUpload && body.category === 'FACTURA') {
+            // Real AI analysis via Claude API (falls back to heuristics if not configured)
+            const invoiceData = await this.aiProcessor.analyzeInvoice(body.name, body.category);
+            aiAnalysis = invoiceData;
+
             let accounts = await this.accountingService.getAccounts(communityId);
             let targetAccountId: string;
 
             if (accounts.length === 0) {
-                // Create a default account if none exists
                 const defaultAccount = await this.accountingService.createAccount(communityId, 'Cuenta Principal', 'BANK', 0);
                 targetAccountId = defaultAccount.id;
             } else {
@@ -55,14 +54,14 @@ export class DocumentsController {
             autoCreatedTransaction = await this.accountingService.createTransaction(
                 communityId,
                 targetAccountId,
-                simulatedAmount,
+                invoiceData.amount,
                 'EXPENSE',
-                'Suministros (Auto-IA)',
-                `Factura procesada: ${simulatedProvider}`
+                invoiceData.category,
+                `${invoiceData.description} | Proveedor: ${invoiceData.provider}`,
             );
         }
 
-        return { ...doc, autoCreatedTransaction };
+        return { ...doc, autoCreatedTransaction, aiAnalysis };
     }
 
     @Delete(':id')

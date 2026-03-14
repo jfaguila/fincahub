@@ -4,7 +4,7 @@ import { AllExceptionsFilter } from './common/http-exception.filter';
 
 // Main entry point - Fincahub API (Stable)
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.useGlobalFilters(new AllExceptionsFilter());
   app.enableCors({
     origin: [

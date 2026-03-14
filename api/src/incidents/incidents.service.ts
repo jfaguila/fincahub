@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class IncidentsService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private mailService: MailService,
+    ) { }
 
     async getIncidents(communityId: string, status?: string) {
         return this.prisma.incident.findMany({
@@ -25,7 +29,7 @@ export class IncidentsService {
     }
 
     async createIncident(communityId: string, reportedById: string, title: string, description: string, photos?: string[]) {
-        return this.prisma.incident.create({
+        const incident = await this.prisma.incident.create({
             data: {
                 communityId,
                 reportedById,
@@ -41,6 +45,35 @@ export class IncidentsService {
                     },
                 },
             },
+        });
+
+        // Notify admins and presidents by email (fire & forget)
+        this.notifyAdmins(communityId, {
+            title,
+            description,
+            reportedBy: incident.reportedBy.name,
+        }).catch(() => null);
+
+        return incident;
+    }
+
+    private async notifyAdmins(communityId: string, incident: { title: string; description: string; reportedBy: string }) {
+        const community = await this.prisma.community.findUnique({
+            where: { id: communityId },
+            include: {
+                users: {
+                    where: { role: { in: ['ADMIN', 'PRESIDENT'] } },
+                    select: { email: true },
+                },
+            },
+        });
+
+        if (!community) return;
+
+        const adminEmails = community.users.map(u => u.email);
+        await this.mailService.sendIncidentAlert(adminEmails, {
+            ...incident,
+            communityName: community.name,
         });
     }
 
