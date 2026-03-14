@@ -4,13 +4,15 @@ import { AllExceptionsFilter } from './common/http-exception.filter';
 
 // Main entry point - Fincahub API (Stable)
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.useGlobalFilters(new AllExceptionsFilter());
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      process.env.FRONTEND_URL || 'https://fincahub-web.vercel.app',
-    ],
+      'https://fincahub.vercel.app',
+      'https://fincahub-jw9yc3lnb-jorge-fabregas-projects.vercel.app',
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
     credentials: true,
   });
   await app.listen(process.env.PORT || 3001);

@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CommunityService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private mailService: MailService,
+    ) { }
 
     // Properties
     async getProperties(communityId: string) {
@@ -75,6 +79,14 @@ export class CommunityService {
                 } catch (propError) {
                     console.error(`[CreateNeighbor] Property creation failed for unit ${unit}:`, propError);
                     // Don't fail the whole user creation if property fails, but log it
+                }
+            }
+
+            // Send welcome email (fire & forget)
+            if (communityId) {
+                const community = await this.prisma.community.findUnique({ where: { id: communityId } });
+                if (community) {
+                    this.mailService.sendWelcome(email, name, community.name).catch(() => null);
                 }
             }
 

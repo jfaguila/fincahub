@@ -13,11 +13,13 @@ import { VotingModule } from './voting/voting.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { MeetingsModule } from './meetings/meetings.module';
 import { BillingModule } from './billing/billing.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    MailModule,
     AuthModule,
     AccountingModule,
     CommunityModule,
