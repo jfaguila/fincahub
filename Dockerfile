@@ -4,17 +4,16 @@ RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-COPY api/package*.json ./
+COPY api/ .
+
 RUN npm install
 
-COPY api/prisma ./prisma
 RUN npx prisma generate
 
-COPY api/ .
 RUN npm run build
 
 RUN chmod +x start.sh
 
-EXPOSE 8080
+EXPOSE 3001
 
 CMD ["sh", "start.sh"]

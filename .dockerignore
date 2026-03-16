@@ -1,0 +1,6 @@
+api/node_modules
+api/dist
+web/node_modules
+web/.next
+**/.env
+**/*.log
