@@ -15,4 +15,4 @@ RUN npm run build
 
 EXPOSE 3001
 
-CMD npx prisma db push && npx prisma db seed && node dist/src/main
+CMD npx prisma db push --skip-generate && node dist/src/main
