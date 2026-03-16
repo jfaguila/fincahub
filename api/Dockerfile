@@ -13,6 +13,8 @@ RUN npx prisma generate
 COPY . .
 RUN npm run build
 
+RUN chmod +x start.sh
+
 EXPOSE 3001
 
-CMD npx prisma db push && npx prisma db seed && node dist/src/main
+CMD ["sh", "start.sh"]
