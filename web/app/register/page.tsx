@@ -23,20 +23,29 @@ export default function RegisterPage() {
       const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role: 'PRESIDENT' }),
+        body: JSON.stringify({ name, email, password, communityName, role: 'PRESIDENT' }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        const data = await res.json();
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Set token cookie for middleware auth
+        document.cookie = `token=${data.token}; path=/; max-age=604800; secure; samesite=strict`;
+
         router.push('/dashboard');
+        router.refresh();
+      } else if (res.status === 409) {
+        setError('Ya existe una cuenta con este email. Prueba a iniciar sesión.');
+      } else if (res.status === 422) {
+        setError(data.message || 'Datos inválidos. Revisa los campos e inténtalo de nuevo.');
       } else {
-        const err = await res.json();
-        setError(err.message || 'Error al crear la cuenta');
+        setError(data.message || 'Error al crear la cuenta');
       }
     } catch {
-      setError('Error de conexión con el servidor.');
+      setError('Error de conexión con el servidor. Inténtelo de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -119,7 +128,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">Contraseña</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">Contraseña <span className="text-gray-500 font-normal">(mínimo 8 caracteres)</span></label>
               <input
                 type="password"
                 value={password}

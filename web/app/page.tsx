@@ -360,8 +360,8 @@ export default function Home() {
               <span>© 2026 Fincahub S.L.</span>
             </div>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-white transition-colors">Privacidad</a>
-              <a href="#" className="hover:text-white transition-colors">Términos</a>
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacidad</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Términos</Link>
               <a href="mailto:hola@fincahub.es" className="hover:text-white transition-colors">Contacto</a>
             </div>
           </div>
