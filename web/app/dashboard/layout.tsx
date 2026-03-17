@@ -1,5 +1,6 @@
 'use client';
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import { useEffect, useState } from "react";
 
@@ -42,7 +43,9 @@ function handleLogout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    window.location.href = '/login';
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure';
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict';
+    window.location.replace('/login');
 }
 
 export default function DashboardLayout({
