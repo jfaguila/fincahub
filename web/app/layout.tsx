@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "fincahub",
   ],
   authors: [{ name: "FincaHub S.L." }],
-  metadataBase: new URL("https://fincahub.vercel.app"),
+  metadataBase: new URL("https://fincahub.es"),
   alternates: {
     canonical: "/",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description:
       "La plataforma definitiva para presidentes y vecinos. Gestion contable, incidencias, votaciones online y comunicacion sin complicaciones.",
     type: "website",
-    url: "https://fincahub.vercel.app",
+    url: "https://fincahub.es",
     locale: "es_ES",
     siteName: "Fincahub",
   },
