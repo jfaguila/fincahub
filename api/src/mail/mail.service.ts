@@ -96,6 +96,36 @@ export class MailService {
         }
     }
 
+    async sendPasswordReset(email: string, name: string, token: string) {
+        if (!this.isConfigured()) {
+            this.logger.warn(`[Mail] No configurado. Reset contraseña para ${email} no enviado. Token: ${token}`);
+            return;
+        }
+        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: 'Recuperar contraseña - FincaHub',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0a0f; color: #fff; padding: 32px; border-radius: 12px;">
+                        <h2 style="color: #3b82f6;">Recuperar contraseña</h2>
+                        <p style="color: #9ca3af;">Hola <strong style="color: #fff;">${name}</strong>,</p>
+                        <p style="color: #9ca3af;">Hemos recibido una solicitud para restablecer tu contraseña. Haz clic para crear una nueva:</p>
+                        <div style="text-align: center; margin: 32px 0;">
+                            <a href="${resetUrl}" style="background: #2563eb; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                                Restablecer contraseña
+                            </a>
+                        </div>
+                        <p style="color: #6b7280; font-size: 13px;">Este enlace caduca en 1 hora. Si no has solicitado el cambio, ignora este email.</p>
+                    </div>
+                `,
+            });
+            this.logger.log(`[Mail] Reset de contraseña enviado a ${email}`);
+        } catch (err) {
+            this.logger.error(`[Mail] Error enviando reset a ${email}:`, err.message);
+        }
+    }
+
     async sendSubscriptionConfirmation(email: string, name: string, plan: string) {
         if (!this.isConfigured()) return;
         try {

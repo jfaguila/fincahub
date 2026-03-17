@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../mail/mail.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class IncidentsService {
     constructor(
         private prisma: PrismaService,
         private mailService: MailService,
+        private notificationsService: NotificationsService,
     ) { }
 
     async getIncidents(communityId: string, status?: string) {
@@ -47,8 +49,8 @@ export class IncidentsService {
             },
         });
 
-        // Notify admins and presidents by email (fire & forget)
-        this.notifyAdmins(communityId, {
+        // Notify admins/presidents: email + in-app (fire & forget)
+        this.notifyAdmins(communityId, reportedById, {
             title,
             description,
             reportedBy: incident.reportedBy.name,
@@ -57,13 +59,13 @@ export class IncidentsService {
         return incident;
     }
 
-    private async notifyAdmins(communityId: string, incident: { title: string; description: string; reportedBy: string }) {
+    private async notifyAdmins(communityId: string, reportedById: string, incident: { title: string; description: string; reportedBy: string }) {
         const community = await this.prisma.community.findUnique({
             where: { id: communityId },
             include: {
                 users: {
                     where: { role: { in: ['ADMIN', 'PRESIDENT'] } },
-                    select: { email: true },
+                    select: { id: true, email: true },
                 },
             },
         });
@@ -75,6 +77,18 @@ export class IncidentsService {
             ...incident,
             communityName: community.name,
         });
+
+        // In-app notifications for admins (excluding the reporter)
+        for (const user of community.users) {
+            if (user.id !== reportedById) {
+                await this.notificationsService.create(user.id, {
+                    type: 'INCIDENT',
+                    title: 'Nueva incidencia',
+                    message: `${incident.reportedBy} ha reportado: "${incident.title}"`,
+                    link: '/dashboard/incidents',
+                });
+            }
+        }
     }
 
     async updateIncidentStatus(incidentId: string, status: string) {

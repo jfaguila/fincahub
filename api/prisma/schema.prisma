@@ -23,13 +23,15 @@ model User {
   community   Community? @relation(fields: [communityId], references: [id])
   communityId String?
 
-  properties    Property[]
-  incidents     Incident[]
-  bookings      Booking[]
-  votes         VoteResponse[]
-  documents     Document[]
-  announcements Announcement[]
-  meetings      Meeting[]
+  properties          Property[]
+  incidents           Incident[]
+  bookings            Booking[]
+  votes               VoteResponse[]
+  documents           Document[]
+  announcements       Announcement[]
+  meetings            Meeting[]
+  notifications       Notification[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Community {
@@ -42,6 +44,7 @@ model Community {
   subscriptionStatus   String    @default("trial") // trial, active, canceled, past_due
   subscriptionPlan     String?   // basic, professional, urbanization
   subscriptionEndsAt   DateTime?
+  trialEndsAt          DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 
@@ -228,4 +231,28 @@ model VoteResponse {
   userId String
 
   @@unique([voteId, userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  type      String   // INCIDENT, ANNOUNCEMENT, MEETING, VOTE, BILLING, SYSTEM
+  title     String
+  message   String
+  link      String?  // URL to navigate to
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 }

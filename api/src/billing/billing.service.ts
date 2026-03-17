@@ -105,6 +105,7 @@ export class BillingService {
                 subscriptionStatus: true,
                 subscriptionPlan: true,
                 subscriptionEndsAt: true,
+                trialEndsAt: true,
             },
         });
     }

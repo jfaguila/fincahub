@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
+import NotificationBell from "@/components/NotificationBell";
 import { useEffect, useState } from "react";
 
 function UserInfo() {
@@ -115,9 +116,7 @@ export default function DashboardLayout({
                 <header className="h-16 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 glass sticky top-0 z-10 px-6 flex items-center justify-between">
                     <h1 className="text-lg font-medium text-foreground">Panel de Control</h1>
                     <div className="flex items-center gap-4">
-                        <button className="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                            🔔 <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
-                        </button>
+                        <NotificationBell />
                     </div>
                 </header>
                 <main className="flex-1 p-6 md:p-8">

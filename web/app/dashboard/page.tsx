@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { API_URL } from '../../lib/api';
+import TrialBanner from '@/components/TrialBanner';
 
 interface DashboardData {
   balance: number;
@@ -75,6 +76,7 @@ export default function Dashboard() {
           <button onClick={() => setShowPlanBanner(false)} className="text-green-400 hover:text-green-300 ml-4">&times;</button>
         </div>
       )}
+      <TrialBanner />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white">Resumen General</h2>

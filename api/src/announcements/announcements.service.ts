@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../mail/mail.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class AnnouncementsService {
     constructor(
         private prisma: PrismaService,
         private mailService: MailService,
+        private notificationsService: NotificationsService,
     ) { }
 
     async getAnnouncements(communityId: string) {
@@ -27,17 +29,17 @@ export class AnnouncementsService {
             },
         });
 
-        // Notify all community members by email (fire & forget)
-        this.notifyNeighbors(communityId, title, content).catch(() => null);
+        // Notify all community members: email + in-app (fire & forget)
+        this.notifyNeighbors(communityId, authorId, title, content).catch(() => null);
 
         return announcement;
     }
 
-    private async notifyNeighbors(communityId: string, title: string, content: string) {
+    private async notifyNeighbors(communityId: string, authorId: string, title: string, content: string) {
         const community = await this.prisma.community.findUnique({
             where: { id: communityId },
             include: {
-                users: { select: { email: true } },
+                users: { select: { id: true, email: true } },
             },
         });
 
@@ -45,6 +47,18 @@ export class AnnouncementsService {
 
         const emails = community.users.map(u => u.email);
         await this.mailService.sendAnnouncement(emails, title, content, community.name);
+
+        // In-app notifications for all neighbors except the author
+        for (const user of community.users) {
+            if (user.id !== authorId) {
+                await this.notificationsService.create(user.id, {
+                    type: 'ANNOUNCEMENT',
+                    title: 'Nuevo aviso en el tablón',
+                    message: title,
+                    link: '/dashboard/announcements',
+                });
+            }
+        }
     }
 
     async deleteAnnouncement(id: string) {
