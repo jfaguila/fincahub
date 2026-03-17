@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { API_URL } from '../../lib/api';
 
 interface DashboardData {
@@ -16,6 +17,16 @@ interface DashboardData {
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showPlanBanner, setShowPlanBanner] = useState(false);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('plan') === 'activated') {
+      setShowPlanBanner(true);
+      const timer = setTimeout(() => setShowPlanBanner(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -58,6 +69,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
+      {showPlanBanner && (
+        <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 font-medium text-sm flex items-center justify-between">
+          <span>&#127881; Plan activado correctamente!</span>
+          <button onClick={() => setShowPlanBanner(false)} className="text-green-400 hover:text-green-300 ml-4">&times;</button>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white">Resumen General</h2>

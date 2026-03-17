@@ -1,5 +1,49 @@
+'use client';
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
+import { useEffect, useState } from "react";
+
+function UserInfo() {
+    const [name, setName] = useState('');
+    const [role, setRole] = useState('');
+
+    useEffect(() => {
+        try {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                setName(user.name || user.fullName || 'Usuario');
+                setRole(user.role || 'Vecino');
+            }
+        } catch {
+            setName('Usuario');
+            setRole('Vecino');
+        }
+    }, []);
+
+    const initials = name
+        ? name.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2)
+        : 'U';
+
+    return (
+        <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold">
+                {initials}
+            </div>
+            <div className="text-sm">
+                <p className="font-medium">{name || 'Cargando...'}</p>
+                <p className="text-xs text-slate-400">{role}</p>
+            </div>
+        </div>
+    );
+}
+
+function handleLogout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    window.location.href = '/login';
+}
 
 export default function DashboardLayout({
     children,
@@ -47,16 +91,19 @@ export default function DashboardLayout({
                     <Link href="/dashboard/meetings" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                         <span>📋</span> Juntas
                     </Link>
+                    <Link href="/dashboard/billing" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                        <span>💳</span> Mi Plan
+                    </Link>
                 </nav>
 
-                <div className="p-4 border-t border-white/10">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold">JD</div>
-                        <div className="text-sm">
-                            <p className="font-medium">Juan Dueño</p>
-                            <p className="text-xs text-slate-400">Presidente</p>
-                        </div>
-                    </div>
+                <div className="p-4 border-t border-white/10 space-y-3">
+                    <UserInfo />
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-white/5 hover:text-red-400 transition-colors"
+                    >
+                        <span>🚪</span> Cerrar sesion
+                    </button>
                 </div>
             </aside>
 
