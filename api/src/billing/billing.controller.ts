@@ -69,9 +69,9 @@ export class BillingController {
     @UseGuards(JwtAuthGuard)
     @Get('status')
     async getStatus(@Request() req: any) {
-        const communityId = req.user.communityId;
-        if (!communityId) return { subscriptionStatus: 'trial', subscriptionPlan: null };
-        return this.billingService.getSubscriptionStatus(communityId);
+        const community = await this.billingService.findCommunityByUser(req.user.userId);
+        if (!community) return { subscriptionStatus: 'trial', subscriptionPlan: null };
+        return this.billingService.getSubscriptionStatus(community.id);
     }
 
     // Stripe webhook — no JWT guard, uses signature verification
