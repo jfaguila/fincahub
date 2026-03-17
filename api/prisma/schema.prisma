@@ -37,8 +37,8 @@ model Community {
   name                 String
   address              String
   bankAccount          String?
-  stripeCustomerId     String?
-  stripeSubscriptionId String?
+  paypalSubscriberId   String?
+  paypalSubscriptionId String?
   subscriptionStatus   String    @default("trial") // trial, active, canceled, past_due
   subscriptionPlan     String?   // basic, professional, urbanization
   subscriptionEndsAt   DateTime?

@@ -3,11 +3,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { BillingService } from './billing.service';
 import { MailService } from '../mail/mail.service';
 
-// Stripe price IDs — set these in env after creating products in Stripe dashboard
-const PRICE_IDS: Record<string, string> = {
-    basic: process.env.STRIPE_PRICE_BASIC || 'price_basic_placeholder',
-    professional: process.env.STRIPE_PRICE_PROFESSIONAL || 'price_professional_placeholder',
-    urbanization: process.env.STRIPE_PRICE_URBANIZATION || 'price_urbanization_placeholder',
+const PLAN_IDS: Record<string, string> = {
+    basic: process.env.PAYPAL_PLAN_BASIC || '',
+    professional: process.env.PAYPAL_PLAN_PROFESSIONAL || '',
+    urbanization: process.env.PAYPAL_PLAN_URBANIZATION || '',
 };
 
 const PLAN_NAMES: Record<string, string> = {
@@ -15,6 +14,28 @@ const PLAN_NAMES: Record<string, string> = {
     professional: 'Profesional',
     urbanization: 'Urbanización',
 };
+
+const PAYPAL_BASE = process.env.PAYPAL_MODE === 'sandbox'
+    ? 'https://api-m.sandbox.paypal.com'
+    : 'https://api-m.paypal.com';
+
+async function getPaypalAccessToken(): Promise<string> {
+    const credentials = Buffer.from(
+        `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+    ).toString('base64');
+
+    const res = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Basic ${credentials}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'grant_type=client_credentials',
+    });
+
+    const data = await res.json() as any;
+    return data.access_token;
+}
 
 @Controller('billing')
 export class BillingController {
@@ -27,32 +48,58 @@ export class BillingController {
     @UseGuards(JwtAuthGuard)
     @Post('checkout')
     async createCheckout(@Body() body: { plan: string }, @Request() req: any) {
-        if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.startsWith('sk_placeholder')) {
+        if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
             return {
                 url: null,
-                message: 'Stripe no configurado. Añade STRIPE_SECRET_KEY en las variables de entorno.',
+                message: 'PayPal no configurado. Añade PAYPAL_CLIENT_ID y PAYPAL_CLIENT_SECRET en las variables de entorno.',
+                demo: true,
+            };
+        }
+
+        const planId = PLAN_IDS[body.plan] || PLAN_IDS.basic;
+        if (!planId) {
+            return {
+                url: null,
+                message: 'Plan de PayPal no configurado. Añade PAYPAL_PLAN_BASIC/PROFESSIONAL/URBANIZATION.',
                 demo: true,
             };
         }
 
         try {
-            const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+            const accessToken = await getPaypalAccessToken();
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-            const session = await stripe.checkout.sessions.create({
-                mode: 'subscription',
-                payment_method_types: ['card'],
-                line_items: [{ price: PRICE_IDS[body.plan] || PRICE_IDS.basic, quantity: 1 }],
-                subscription_data: { trial_period_days: 30 },
-                success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard?plan=activated`,
-                cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/#pricing`,
-                customer_email: req.user.email,
-                metadata: { userId: req.user.userId, plan: body.plan },
+            const res = await fetch(`${PAYPAL_BASE}/v1/billing/subscriptions`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'PayPal-Request-Id': `${req.user.userId}-${Date.now()}`,
+                },
+                body: JSON.stringify({
+                    plan_id: planId,
+                    subscriber: { email_address: req.user.email },
+                    application_context: {
+                        brand_name: 'FincaHub',
+                        locale: 'es-ES',
+                        return_url: `${frontendUrl}/dashboard?plan=activated`,
+                        cancel_url: `${frontendUrl}/#pricing`,
+                        user_action: 'SUBSCRIBE_NOW',
+                    },
+                    custom_id: `${req.user.userId}:${body.plan}`,
+                }),
             });
 
-            return { url: session.url };
-        } catch (err) {
-            return { url: null, message: `Error de Stripe: ${err.message}`, demo: true };
+            const data = await res.json() as any;
+            const approveLink = data.links?.find((l: any) => l.rel === 'approve');
+
+            if (!approveLink) {
+                return { url: null, message: `Error de PayPal: ${JSON.stringify(data)}`, demo: true };
+            }
+
+            return { url: approveLink.href };
+        } catch (err: any) {
+            return { url: null, message: `Error de PayPal: ${err.message}`, demo: true };
         }
     }
 
@@ -74,41 +121,59 @@ export class BillingController {
         return this.billingService.getSubscriptionStatus(community.id);
     }
 
-    // Stripe webhook — no JWT guard, uses signature verification
+    // PayPal webhook — no JWT guard, uses signature verification
     @Post('webhook')
     async handleWebhook(
-        @Headers('stripe-signature') signature: string,
+        @Headers() headers: Record<string, string>,
         @Req() req: RawBodyRequest<Request>,
     ) {
-        const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-        if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.startsWith('sk_placeholder')) {
+        if (!process.env.PAYPAL_CLIENT_ID) {
             return { received: true, demo: true };
         }
 
-        let event: any;
+        const rawBody = req.rawBody ? req.rawBody.toString() : JSON.stringify(req.body);
+        const event = JSON.parse(rawBody);
 
-        try {
-            const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+        // Verify webhook signature with PayPal
+        if (process.env.PAYPAL_WEBHOOK_ID) {
+            try {
+                const accessToken = await getPaypalAccessToken();
+                const verifyRes = await fetch(`${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        auth_algo: headers['paypal-auth-algo'],
+                        cert_url: headers['paypal-cert-url'],
+                        transmission_id: headers['paypal-transmission-id'],
+                        transmission_sig: headers['paypal-transmission-sig'],
+                        transmission_time: headers['paypal-transmission-time'],
+                        webhook_id: process.env.PAYPAL_WEBHOOK_ID,
+                        webhook_event: event,
+                    }),
+                });
 
-            if (webhookSecret && signature && req.rawBody) {
-                event = stripe.webhooks.constructEvent(req.rawBody, signature, webhookSecret);
-            } else {
-                // Dev mode: parse body directly
-                event = req.body as any;
+                const verifyData = await verifyRes.json() as any;
+                if (verifyData.verification_status !== 'SUCCESS') {
+                    return { error: 'Webhook signature verification failed' };
+                }
+            } catch {
+                return { error: 'Webhook verification error' };
             }
-        } catch (err) {
-            return { error: `Webhook signature verification failed: ${err.message}` };
         }
 
-        switch (event.type) {
-            case 'checkout.session.completed': {
-                const community = await this.billingService.handleCheckoutCompleted(event.data.object);
+        const resource = event.resource;
+
+        switch (event.event_type) {
+            case 'BILLING.SUBSCRIPTION.ACTIVATED': {
+                const community = await this.billingService.handleSubscriptionActivated(resource);
                 if (community) {
+                    const [, plan] = (resource.custom_id || ':').split(':');
                     const adminEmails = community.users.map((u: any) => u.email);
                     const adminName = community.users[0]?.name || 'Administrador';
-                    const planName = PLAN_NAMES[event.data.object.metadata?.plan] || 'Básico';
+                    const planName = PLAN_NAMES[plan] || 'Básico';
                     for (const email of adminEmails) {
                         await this.mailService.sendSubscriptionConfirmation(email, adminName, planName);
                     }
@@ -116,12 +181,13 @@ export class BillingController {
                 break;
             }
 
-            case 'customer.subscription.updated':
-                await this.billingService.handleSubscriptionUpdated(event.data.object);
+            case 'BILLING.SUBSCRIPTION.UPDATED':
+                await this.billingService.handleSubscriptionUpdated(resource);
                 break;
 
-            case 'customer.subscription.deleted':
-                await this.billingService.handleSubscriptionDeleted(event.data.object);
+            case 'BILLING.SUBSCRIPTION.CANCELLED':
+            case 'BILLING.SUBSCRIPTION.SUSPENDED':
+                await this.billingService.handleSubscriptionCancelled(resource);
                 break;
         }
 
