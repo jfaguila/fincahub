@@ -16,6 +16,8 @@ import { AnnouncementsModule } from './announcements/announcements.module';
 import { MeetingsModule } from './meetings/meetings.module';
 import { BillingModule } from './billing/billing.module';
 import { MailModule } from './mail/mail.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { BackupModule } from './backup/backup.module';
 
 @Module({
   imports: [
@@ -44,6 +46,8 @@ import { MailModule } from './mail/mail.module';
     AnnouncementsModule,
     MeetingsModule,
     BillingModule,
+    NotificationsModule,
+    BackupModule,
   ],
   controllers: [AppController],
   providers: [

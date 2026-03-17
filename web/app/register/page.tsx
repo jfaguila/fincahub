@@ -35,8 +35,7 @@ export default function RegisterPage() {
         // Set token cookie for middleware auth
         document.cookie = `token=${data.token}; path=/; max-age=604800; secure; samesite=strict`;
 
-        router.push('/dashboard');
-        router.refresh();
+        router.push('/onboarding');
       } else if (res.status === 409) {
         setError('Ya existe una cuenta con este email. Prueba a iniciar sesión.');
       } else if (res.status === 422) {

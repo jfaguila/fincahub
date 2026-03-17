@@ -260,7 +260,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <Link
-                    href={plan.name === 'Urbanización' ? 'mailto:hola@fincahub.es' : '/register'}
+                    href={plan.name === 'Urbanización' ? 'mailto:hola@fincahub.com' : '/register'}
                     className={`block text-center py-3 rounded-xl font-semibold transition-all hover:-translate-y-0.5 ${
                       plan.highlight
                         ? 'bg-white text-blue-600 hover:bg-blue-50 shadow-lg'
@@ -274,7 +274,7 @@ export default function Home() {
             </div>
             <p className="text-center text-gray-500 text-sm mt-8">
               ¿Tienes más de 200 viviendas o necesitas integración personalizada?{' '}
-              <a href="mailto:hola@fincahub.es" className="text-blue-400 hover:underline">Contáctanos</a>
+              <a href="mailto:hola@fincahub.com" className="text-blue-400 hover:underline">Contáctanos</a>
             </p>
           </div>
         </section>
@@ -362,7 +362,7 @@ export default function Home() {
             <div className="flex gap-6">
               <Link href="/privacy" className="hover:text-white transition-colors">Privacidad</Link>
               <Link href="/terms" className="hover:text-white transition-colors">Términos</Link>
-              <a href="mailto:hola@fincahub.es" className="hover:text-white transition-colors">Contacto</a>
+              <a href="mailto:hola@fincahub.com" className="hover:text-white transition-colors">Contacto</a>
             </div>
           </div>
         </div>

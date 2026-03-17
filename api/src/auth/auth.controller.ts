@@ -25,4 +25,14 @@ export class AuthController {
     async getProfile(@Request() req: AuthRequest) {
         return this.authService.validateUser(req.user.userId);
     }
+
+    @Post('forgot-password')
+    async forgotPassword(@Body() body: { email: string }) {
+        return this.authService.forgotPassword(body.email);
+    }
+
+    @Post('reset-password')
+    async resetPassword(@Body() body: { token: string; password: string }) {
+        return this.authService.resetPassword(body.token, body.password);
+    }
 }

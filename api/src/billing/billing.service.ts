@@ -8,8 +8,8 @@ export class BillingService {
     constructor(private prisma: PrismaService) { }
 
     async updateSubscription(communityId: string, data: {
-        stripeCustomerId?: string;
-        stripeSubscriptionId?: string;
+        paypalSubscriberId?: string;
+        paypalSubscriptionId?: string;
         subscriptionStatus: string;
         subscriptionPlan?: string;
         subscriptionEndsAt?: Date | null;
@@ -20,9 +20,9 @@ export class BillingService {
         });
     }
 
-    async findCommunityByStripeCustomer(stripeCustomerId: string) {
+    async findCommunityByPaypalSubscription(paypalSubscriptionId: string) {
         return this.prisma.community.findFirst({
-            where: { stripeCustomerId },
+            where: { paypalSubscriptionId },
             include: {
                 users: {
                     where: { role: 'ADMIN' },
@@ -49,44 +49,44 @@ export class BillingService {
         return user?.community || null;
     }
 
-    async handleCheckoutCompleted(session: any) {
-        const { userId, plan } = session.metadata || {};
+    async handleSubscriptionActivated(resource: any) {
+        const [userId, plan] = (resource.custom_id || ':').split(':');
         if (!userId) return;
 
         const community = await this.findCommunityByUser(userId);
         if (!community) return;
 
         await this.updateSubscription(community.id, {
-            stripeCustomerId: session.customer,
-            stripeSubscriptionId: session.subscription,
+            paypalSubscriberId: resource.subscriber?.payer_id,
+            paypalSubscriptionId: resource.id,
             subscriptionStatus: 'active',
             subscriptionPlan: plan || 'basic',
         });
 
-        this.logger.log(`[Billing] Suscripción activada para comunidad ${community.id}, plan: ${plan}`);
+        this.logger.log(`[Billing] Suscripción PayPal activada para comunidad ${community.id}, plan: ${plan}`);
         return community;
     }
 
-    async handleSubscriptionUpdated(subscription: any) {
-        const community = await this.findCommunityByStripeCustomer(subscription.customer);
+    async handleSubscriptionUpdated(resource: any) {
+        const community = await this.findCommunityByPaypalSubscription(resource.id);
         if (!community) return;
 
-        const endsAt = subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000)
+        const endsAt = resource.billing_info?.next_billing_time
+            ? new Date(resource.billing_info.next_billing_time)
             : null;
 
+        const status = resource.status?.toLowerCase();
         await this.updateSubscription(community.id, {
-            stripeSubscriptionId: subscription.id,
-            subscriptionStatus: subscription.status,
+            subscriptionStatus: status === 'active' ? 'active' : status,
             subscriptionEndsAt: endsAt,
         });
 
-        this.logger.log(`[Billing] Suscripción actualizada para comunidad ${community.id}: ${subscription.status}`);
+        this.logger.log(`[Billing] Suscripción PayPal actualizada para comunidad ${community.id}: ${resource.status}`);
         return community;
     }
 
-    async handleSubscriptionDeleted(subscription: any) {
-        const community = await this.findCommunityByStripeCustomer(subscription.customer);
+    async handleSubscriptionCancelled(resource: any) {
+        const community = await this.findCommunityByPaypalSubscription(resource.id);
         if (!community) return;
 
         await this.updateSubscription(community.id, {
@@ -94,7 +94,7 @@ export class BillingService {
             subscriptionEndsAt: new Date(),
         });
 
-        this.logger.log(`[Billing] Suscripción cancelada para comunidad ${community.id}`);
+        this.logger.log(`[Billing] Suscripción PayPal cancelada para comunidad ${community.id}`);
         return community;
     }
 
@@ -105,6 +105,7 @@ export class BillingService {
                 subscriptionStatus: true,
                 subscriptionPlan: true,
                 subscriptionEndsAt: true,
+                trialEndsAt: true,
             },
         });
     }

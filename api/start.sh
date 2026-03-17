@@ -12,5 +12,12 @@ else
   echo "WARNING: prisma db push failed (exit code $?). Continuing anyway..."
 fi
 
+echo "Running prisma seed (skips if already seeded)..."
+if npx prisma db seed; then
+  echo "Seed OK"
+else
+  echo "WARNING: seed failed (exit code $?). Continuing anyway..."
+fi
+
 echo "Starting application..."
 exec node dist/src/main

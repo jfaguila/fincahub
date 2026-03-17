@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
+import NotificationBell from "@/components/NotificationBell";
 import { useEffect, useState } from "react";
 
 function UserInfo() {
@@ -46,6 +47,22 @@ function handleLogout() {
     document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure';
     document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict';
     window.location.replace('/login');
+}
+
+function AdminLink() {
+    const [isAdmin, setIsAdmin] = useState(false);
+    useEffect(() => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            setIsAdmin(['ADMIN', 'PRESIDENT'].includes(user.role));
+        } catch { /* ignore */ }
+    }, []);
+    if (!isAdmin) return null;
+    return (
+        <Link href="/dashboard/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <span>⚙️</span> Administración
+        </Link>
+    );
 }
 
 export default function DashboardLayout({
@@ -97,6 +114,7 @@ export default function DashboardLayout({
                     <Link href="/dashboard/billing" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                         <span>💳</span> Mi Plan
                     </Link>
+                    <AdminLink />
                 </nav>
 
                 <div className="p-4 border-t border-white/10 space-y-3">
@@ -115,9 +133,7 @@ export default function DashboardLayout({
                 <header className="h-16 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 glass sticky top-0 z-10 px-6 flex items-center justify-between">
                     <h1 className="text-lg font-medium text-foreground">Panel de Control</h1>
                     <div className="flex items-center gap-4">
-                        <button className="relative p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                            🔔 <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
-                        </button>
+                        <NotificationBell />
                     </div>
                 </header>
                 <main className="flex-1 p-6 md:p-8">

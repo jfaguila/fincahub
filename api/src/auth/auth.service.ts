@@ -1,13 +1,16 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
     constructor(
         private prisma: PrismaService,
         private jwtService: JwtService,
+        private mailService: MailService,
     ) { }
 
     async register(email: string, password: string, name: string, role: string = 'NEIGHBOR', communityName?: string) {
@@ -24,6 +27,9 @@ export class AuthService {
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const trialEndsAt = new Date();
+        trialEndsAt.setDate(trialEndsAt.getDate() + 30);
 
         // Use a transaction to create user, community, default account, and default spaces
         const result = await this.prisma.$transaction(async (tx) => {
@@ -51,6 +57,7 @@ export class AuthService {
                     data: {
                         name: communityName,
                         address: '',
+                        trialEndsAt,
                     },
                 });
 
@@ -146,6 +153,55 @@ export class AuthService {
         }
 
         return user;
+    }
+
+    async forgotPassword(email: string) {
+        // Always return success to avoid email enumeration
+        const user = await this.prisma.user.findUnique({ where: { email } });
+        if (!user) return { message: 'Si existe una cuenta con ese email, recibirás un enlace.' };
+
+        // Invalidate any existing tokens
+        await this.prisma.passwordResetToken.updateMany({
+            where: { userId: user.id, used: false },
+            data: { used: true },
+        });
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+
+        await this.prisma.passwordResetToken.create({
+            data: { token, expiresAt, userId: user.id },
+        });
+
+        await this.mailService.sendPasswordReset(user.email, user.name, token);
+
+        return { message: 'Si existe una cuenta con ese email, recibirás un enlace.' };
+    }
+
+    async resetPassword(token: string, newPassword: string) {
+        const resetToken = await this.prisma.passwordResetToken.findUnique({
+            where: { token },
+            include: { user: true },
+        });
+
+        if (!resetToken || resetToken.used || resetToken.expiresAt < new Date()) {
+            throw new BadRequestException('El enlace no es válido o ha expirado.');
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await this.prisma.$transaction([
+            this.prisma.user.update({
+                where: { id: resetToken.userId },
+                data: { password: hashedPassword },
+            }),
+            this.prisma.passwordResetToken.update({
+                where: { id: resetToken.id },
+                data: { used: true },
+            }),
+        ]);
+
+        return { message: 'Contraseña actualizada correctamente.' };
     }
 
     private generateToken(userId: string, email: string, role: string): string {
