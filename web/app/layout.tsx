@@ -3,44 +3,119 @@ import "./globals.css";
 import CookieConsent from "../components/CookieConsent";
 
 export const metadata: Metadata = {
-  title: "Fincahub | Gestion de Comunidades Inteligente",
+  title: {
+    default: "FincaHub | Software para Comunidades de Vecinos",
+    template: "%s | FincaHub",
+  },
   description:
-    "La plataforma definitiva para presidentes y vecinos. Gestion contable, incidencias, votaciones online y comunicacion para comunidades de propietarios.",
+    "Software de gestión para comunidades de propietarios. Contabilidad transparente, votaciones online, incidencias, reserva de espacios y portal del vecino. 30 días gratis.",
   keywords: [
-    "gestion comunidades",
-    "comunidad de propietarios",
-    "administracion de fincas",
-    "votaciones online",
-    "contabilidad comunidad",
-    "incidencias comunidad",
+    "software gestion comunidades vecinos",
+    "app administrador fincas",
+    "programa contabilidad comunidad propietarios",
+    "votaciones online junta propietarios",
+    "gestion incidencias comunidad",
     "reserva espacios comunes",
-    "software comunidades",
+    "portal vecino online",
+    "convocatoria junta propietarios",
+    "morosos comunidad vecinos",
     "fincahub",
+    "administracion fincas online",
+    "software comunidades propietarios espana",
   ],
   authors: [{ name: "FincaHub S.L." }],
+  creator: "FincaHub S.L.",
+  publisher: "FincaHub S.L.",
   metadataBase: new URL("https://fincahub.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Fincahub | Gestion de Comunidades Inteligente",
+    title: "FincaHub | Software para Comunidades de Vecinos",
     description:
-      "La plataforma definitiva para presidentes y vecinos. Gestion contable, incidencias, votaciones online y comunicacion sin complicaciones.",
+      "Contabilidad transparente, votaciones online, incidencias y reservas. Todo en una app. 30 días gratis, sin tarjeta.",
     type: "website",
     url: "https://fincahub.com",
     locale: "es_ES",
-    siteName: "Fincahub",
+    siteName: "FincaHub",
+    images: [
+      {
+        url: "/hero.png",
+        width: 1200,
+        height: 630,
+        alt: "FincaHub — Software para comunidades de vecinos",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fincahub | Gestion de Comunidades Inteligente",
+    title: "FincaHub | Software para Comunidades de Vecinos",
     description:
-      "La plataforma definitiva para presidentes y vecinos. Gestion contable, incidencias, votaciones online y comunicacion sin complicaciones.",
+      "Contabilidad transparente, votaciones online, incidencias y reservas. Todo en una app. 30 días gratis.",
+    images: ["/hero.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+  verification: {
+    google: "REEMPLAZA_CON_TU_ID_GOOGLE_SEARCH_CONSOLE",
+  },
+  category: "software",
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "FincaHub",
+  url: "https://fincahub.com",
+  description:
+    "Software de gestión integral para comunidades de propietarios. Contabilidad, votaciones online, incidencias, reservas y portal del vecino.",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  offers: [
+    {
+      "@type": "Offer",
+      name: "Plan Básico",
+      price: "14.99",
+      priceCurrency: "EUR",
+      priceValidUntil: "2027-01-01",
+      eligibleQuantity: {
+        "@type": "QuantitativeValue",
+        value: 1,
+        unitText: "month",
+      },
+    },
+    {
+      "@type": "Offer",
+      name: "Plan Profesional",
+      price: "29.99",
+      priceCurrency: "EUR",
+      priceValidUntil: "2027-01-01",
+    },
+    {
+      "@type": "Offer",
+      name: "Plan Urbanización",
+      price: "59.99",
+      priceCurrency: "EUR",
+      priceValidUntil: "2027-01-01",
+    },
+  ],
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    reviewCount: "2400",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  inLanguage: "es",
+  availableOnDevice: "Desktop, Mobile, Tablet",
 };
 
 export default function RootLayout({
@@ -50,6 +125,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="antialiased">
         {children}
         <CookieConsent />

@@ -18,6 +18,7 @@ import { BillingModule } from './billing/billing.module';
 import { MailModule } from './mail/mail.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { BackupModule } from './backup/backup.module';
+import { OnboardingModule } from './onboarding/onboarding.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { BackupModule } from './backup/backup.module';
     BillingModule,
     NotificationsModule,
     BackupModule,
+    OnboardingModule,
   ],
   controllers: [AppController],
   providers: [
