@@ -150,9 +150,9 @@ export default function RegisterPage() {
 
             <p className="text-xs text-gray-500 text-center">
               Al registrarte aceptas nuestros{' '}
-              <a href="#" className="text-blue-400 hover:underline">Términos de uso</a>{' '}
+              <Link href="/terms" className="text-blue-400 hover:underline">Términos de uso</Link>{' '}
               y{' '}
-              <a href="#" className="text-blue-400 hover:underline">Política de privacidad</a>
+              <Link href="/privacy" className="text-blue-400 hover:underline">Política de privacidad</Link>
             </p>
           </form>
 
