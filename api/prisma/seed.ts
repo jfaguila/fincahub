@@ -14,6 +14,9 @@ async function main() {
     }
 
     // Create default community
+    const trialEndsAt = new Date();
+    trialEndsAt.setDate(trialEndsAt.getDate() + 30);
+
     const community = await prisma.community.upsert({
         where: { id: 'default' },
         update: {},
@@ -22,6 +25,7 @@ async function main() {
             name: 'Residencial Las Palmeras',
             address: 'Calle Principal 123, Madrid',
             bankAccount: 'ES12 1234 1234 1234 1234',
+            trialEndsAt,
         },
     });
 

@@ -49,6 +49,22 @@ function handleLogout() {
     window.location.replace('/login');
 }
 
+function AdminLink() {
+    const [isAdmin, setIsAdmin] = useState(false);
+    useEffect(() => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            setIsAdmin(['ADMIN', 'PRESIDENT'].includes(user.role));
+        } catch { /* ignore */ }
+    }, []);
+    if (!isAdmin) return null;
+    return (
+        <Link href="/dashboard/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <span>⚙️</span> Administración
+        </Link>
+    );
+}
+
 export default function DashboardLayout({
     children,
 }: {
@@ -98,6 +114,7 @@ export default function DashboardLayout({
                     <Link href="/dashboard/billing" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                         <span>💳</span> Mi Plan
                     </Link>
+                    <AdminLink />
                 </nav>
 
                 <div className="p-4 border-t border-white/10 space-y-3">
