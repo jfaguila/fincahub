@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, UseGuards, Request } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -36,5 +36,16 @@ export class AuthController {
     @Throttle({ short: { ttl: 300000, limit: 5 } })
     async resetPassword(@Body() body: { token: string; password: string }) {
         return this.authService.resetPassword(body.token, body.password);
+    }
+
+    @Get('verify-email')
+    async verifyEmail(@Query('token') token: string) {
+        return this.authService.verifyEmail(token);
+    }
+
+    @Post('resend-verification')
+    @Throttle({ short: { ttl: 300000, limit: 3 } })
+    async resendVerification(@Body() body: { email: string }) {
+        return this.authService.resendVerification(body.email);
     }
 }

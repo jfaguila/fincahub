@@ -97,6 +97,39 @@ export class MailService {
         }
     }
 
+    async sendEmailVerification(email: string, name: string, token: string) {
+        if (!this.isConfigured()) {
+            this.logger.warn(`[Mail] No configurado. Verificación de email para ${email} no enviada.`);
+            return;
+        }
+        const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: 'Verifica tu email - FincaHub',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0a0f; color: #fff; padding: 32px; border-radius: 12px;">
+                        <div style="text-align:center; margin-bottom:24px;">
+                            <span style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FincaHub</span>
+                        </div>
+                        <h2 style="color: #3b82f6; text-align:center;">Confirma tu email</h2>
+                        <p style="color: #9ca3af;">Hola <strong style="color: #fff;">${name}</strong>,</p>
+                        <p style="color: #9ca3af;">Gracias por registrarte en FincaHub. Haz clic en el botón para confirmar tu dirección de email y activar tu cuenta:</p>
+                        <div style="text-align: center; margin: 32px 0;">
+                            <a href="${verifyUrl}" style="background: linear-gradient(135deg,#2563eb,#7c3aed); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size:16px;">
+                                Verificar mi email →
+                            </a>
+                        </div>
+                        <p style="color: #6b7280; font-size: 13px; text-align:center;">Este enlace caduca en 24 horas. Si no te has registrado en FincaHub, ignora este email.</p>
+                    </div>
+                `,
+            });
+            this.logger.log(`[Mail] Verificación de email enviada a ${email}`);
+        } catch (err) {
+            this.logger.error(`[Mail] Error enviando verificación a ${email}:`, err.message);
+        }
+    }
+
     async sendPasswordReset(email: string, name: string, token: string) {
         if (!this.isConfigured()) {
             this.logger.warn(`[Mail] No configurado. Reset contraseña para ${email} no enviado.`);

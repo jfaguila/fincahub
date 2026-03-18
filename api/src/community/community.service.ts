@@ -163,7 +163,7 @@ export class CommunityService {
         });
     }
 
-    async updateCommunity(communityId: string, data: { name?: string; address?: string; bankAccount?: string }) {
+    async updateCommunity(communityId: string, data: { name?: string; address?: string; postalCode?: string; city?: string; province?: string; cif?: string; bankAccount?: string }) {
         return this.prisma.community.update({
             where: { id: communityId },
             data,

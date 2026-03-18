@@ -29,13 +29,7 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-
-        // Set token cookie for middleware auth
-        document.cookie = `token=${data.token}; path=/; max-age=604800; secure; samesite=strict`;
-
-        router.push('/onboarding');
+        router.push(`/verify-email-sent?email=${encodeURIComponent(email)}`);
       } else if (res.status === 409) {
         setError('Ya existe una cuenta con este email. Prueba a iniciar sesión.');
       } else if (res.status === 422) {

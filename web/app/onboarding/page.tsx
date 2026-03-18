@@ -35,6 +35,10 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [address, setAddress] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [city, setCity] = useState('');
+  const [province, setProvince] = useState('');
+  const [cif, setCif] = useState('');
   const [bankAccount, setBankAccount] = useState('');
   const [saving, setSaving] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -45,12 +49,12 @@ export default function OnboardingPage() {
       try {
         const token = localStorage.getItem('token');
         await fetch(`${API_URL}/community`, {
-          method: 'PATCH',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ address, bankAccount }),
+          body: JSON.stringify({ address, postalCode, city, province, cif, bankAccount }),
         });
       } catch {
         // Non-blocking, can configure later
@@ -152,23 +156,72 @@ export default function OnboardingPage() {
         {step === 1 && (
           <div className="rounded-2xl bg-white/5 border border-white/10 p-8">
             <h2 className="text-2xl font-bold text-white mb-1">Configura tu comunidad</h2>
-            <p className="text-gray-400 text-sm mb-6">Esta información se usa en los documentos y comunicaciones. Puedes cambiarla después.</p>
+            <p className="text-gray-400 text-sm mb-6">Esta información aparece en los documentos y comunicaciones. Puedes completarla después.</p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Dirección de la comunidad</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Dirección</label>
                 <input
                   type="text"
                   value={address}
                   onChange={e => setAddress(e.target.value)}
-                  placeholder="Ej: C/ Gran Vía, 45, Madrid"
+                  placeholder="Ej: C/ Gran Vía, 45"
                   className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Código postal</label>
+                  <input
+                    type="text"
+                    value={postalCode}
+                    onChange={e => setPostalCode(e.target.value)}
+                    placeholder="28013"
+                    maxLength={5}
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Población</label>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={e => setCity(e.target.value)}
+                    placeholder="Madrid"
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Provincia</label>
+                  <input
+                    type="text"
+                    value={province}
+                    onChange={e => setProvince(e.target.value)}
+                    placeholder="Madrid"
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                    CIF <span className="text-gray-500 font-normal">(opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={cif}
+                    onChange={e => setCif(e.target.value)}
+                    placeholder="H28123456"
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  IBAN de la cuenta bancaria <span className="text-gray-500 font-normal">(opcional)</span>
+                  IBAN cuenta bancaria <span className="text-gray-500 font-normal">(opcional)</span>
                 </label>
                 <input
                   type="text"
@@ -177,7 +230,7 @@ export default function OnboardingPage() {
                   placeholder="ES76 2100 0418 4502 0005 1332"
                   className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
-                <p className="text-gray-500 text-xs mt-1">Se usa para generar recibos y reclamaciones de deuda.</p>
+                <p className="text-gray-500 text-xs mt-1">Para recibos y reclamaciones de deuda SEPA.</p>
               </div>
             </div>
 

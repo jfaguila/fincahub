@@ -23,6 +23,8 @@ export default function NeighborsPage() {
     const [newEmail, setNewEmail] = useState('');
     const [newUnit, setNewUnit] = useState('');
     const [newIban, setNewIban] = useState('');
+    const [importing, setImporting] = useState(false);
+    const [importResult, setImportResult] = useState<{ success: string[]; errors: string[] } | null>(null);
 
     const fetchData = async () => {
         try {
@@ -87,6 +89,30 @@ export default function NeighborsPage() {
         }
     };
 
+    const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setImporting(true);
+        setImportResult(null);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const res = await fetch(`${API_URL}/community/neighbors/import`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                body: formData,
+            });
+            const data = await res.json();
+            setImportResult(data);
+            if (data.success?.length > 0) fetchData();
+        } catch {
+            setImportResult({ success: [], errors: ['Error de conexión al importar.'] });
+        } finally {
+            setImporting(false);
+            e.target.value = '';
+        }
+    };
+
     const handleClaim = (neighbor: Neighbor) => {
         if (!neighbor.debt) return;
         const today = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -146,13 +172,36 @@ export default function NeighborsPage() {
         <div className="p-8">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">Gestión de Vecinos</h1>
-                <button
-                    onClick={() => setShowForm(!showForm)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold"
-                >
-                    {showForm ? 'Cancelar' : '+ Nuevo Vecino'}
-                </button>
+                <div className="flex gap-2">
+                    <label className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg hover:bg-white/20 transition-colors font-semibold cursor-pointer border border-white/20 text-sm">
+                        {importing ? 'Importando...' : '📥 Importar Excel'}
+                        <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={handleImport} disabled={importing} />
+                    </label>
+                    <button
+                        onClick={() => setShowForm(!showForm)}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold"
+                    >
+                        {showForm ? 'Cancelar' : '+ Nuevo Vecino'}
+                    </button>
+                </div>
             </div>
+
+            {importResult && (
+                <div className={`mb-6 p-4 rounded-xl border text-sm ${importResult.errors.length > 0 ? 'bg-yellow-500/10 border-yellow-500/30' : 'bg-green-500/10 border-green-500/30'}`}>
+                    {importResult.success.length > 0 && (
+                        <p className="text-green-400 font-semibold mb-1">✅ {importResult.success.length} vecino(s) importado(s) correctamente.</p>
+                    )}
+                    {importResult.errors.length > 0 && (
+                        <div>
+                            <p className="text-yellow-400 font-semibold mb-1">⚠️ {importResult.errors.length} error(es):</p>
+                            <ul className="text-yellow-300 text-xs space-y-0.5">
+                                {importResult.errors.map((e, i) => <li key={i}>{e}</li>)}
+                            </ul>
+                        </div>
+                    )}
+                    <p className="text-gray-500 text-xs mt-2">Formato esperado: columnas nombre, email, vivienda (opcional), IBAN (opcional)</p>
+                </div>
+            )}
 
             {showForm && (
                 <form onSubmit={handleCreate} className="mb-8 bg-white/10 p-6 rounded-xl border border-white/20">

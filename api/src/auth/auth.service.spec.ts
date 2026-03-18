@@ -124,8 +124,8 @@ describe('AuthService', () => {
             });
 
             const result = await service.register('new@test.com', 'pass1234', 'User', 'PRESIDENT', 'Comunidad');
-            expect(result.token).toBe('mock-token');
-            expect(result.user.email).toBe('new@test.com');
+            expect(result.message).toContain('email');
+            expect(result.email).toBe('new@test.com');
         });
     });
 

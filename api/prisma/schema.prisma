@@ -11,14 +11,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String
-  role      String   @default("NEIGHBOR") // ADMIN, PRESIDENT, NEIGHBOR
-  iban      String?  // IBAN for SEPA payments
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                     String   @id @default(uuid())
+  email                  String   @unique
+  password               String
+  name                   String
+  role                   String   @default("NEIGHBOR") // ADMIN, PRESIDENT, NEIGHBOR
+  iban                   String?  // IBAN for SEPA payments
+  emailVerified          Boolean  @default(false)
+  emailVerificationToken String?  @unique
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
   community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
   communityId String?
@@ -38,6 +40,10 @@ model Community {
   id                   String    @id @default(uuid())
   name                 String
   address              String
+  postalCode           String?
+  city                 String?
+  province             String?
+  cif                  String?
   bankAccount          String?
   paypalSubscriberId   String?
   paypalSubscriptionId String?
