@@ -40,11 +40,11 @@ export class DocumentsController {
     }
 
     @Post('upload')
-    async uploadDocument(@Body() body: { name: string; category: string; isSmartUpload?: boolean }, @Request() req: any) {
+    async uploadDocument(@Body() body: { name: string; url?: string; category: string; isSmartUpload?: boolean }, @Request() req: any) {
         const communityId = req.user.communityId || 'default';
         const userId = req.user.userId;
 
-        const doc = await this.documentsService.uploadDocument(communityId, userId, body.name, 'http://placeholder.url', body.category);
+        const doc = await this.documentsService.uploadDocument(communityId, userId, body.name, body.url || '', body.category);
 
         let autoCreatedTransaction = null;
         let aiAnalysis = null;

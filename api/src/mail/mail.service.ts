@@ -11,12 +11,17 @@ export class MailService {
         return !!(process.env.MAIL_USER && process.env.MAIL_PASS);
     }
 
-    async sendWelcome(email: string, name: string, communityName: string) {
+    async sendWelcome(email: string, name: string, communityName: string, temporaryPassword?: string) {
         if (!this.isConfigured()) {
             this.logger.warn(`[Mail] No configurado. Bienvenida a ${name} <${email}> no enviada.`);
             return;
         }
         try {
+            const passwordSection = temporaryPassword
+                ? `<p>Tu contraseña temporal: <strong style="font-size:18px; letter-spacing:2px;">${temporaryPassword}</strong></p>
+                   <p style="color:#6b7280; font-size:13px;">Cambia tu contraseña tras el primer acceso desde tu perfil.</p>`
+                : `<p>Usa el enlace de recuperación de contraseña en la pantalla de inicio de sesión para establecer tu contraseña.</p>`;
+
             await this.mailerService.sendMail({
                 to: email,
                 subject: `Bienvenido a ${communityName} - FincaHub`,
@@ -26,8 +31,8 @@ export class MailService {
                         <p>Hola <strong>${name}</strong>,</p>
                         <p>Has sido añadido como vecino en la comunidad <strong>${communityName}</strong>.</p>
                         <p>Tu email de acceso: <strong>${email}</strong></p>
-                        <p>Para establecer tu contraseña, usa el enlace de recuperación de contraseña en la pantalla de inicio de sesión.</p>
-                        <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/forgot-password"
+                        ${passwordSection}
+                        <a href="${process.env.FRONTEND_URL || 'https://fincahub.com'}/login"
                            style="background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 16px;">
                             Iniciar Sesión
                         </a>

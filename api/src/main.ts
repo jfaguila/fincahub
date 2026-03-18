@@ -34,6 +34,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:3000',
     'https://fincahub.vercel.app',
+    'https://fincahub-git-main-jorge-fabregas-projects.vercel.app',
     'https://fincahub.com',
     'https://www.fincahub.com',
     process.env.FRONTEND_URL,

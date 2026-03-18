@@ -186,7 +186,7 @@ export class BillingController {
                     const adminName = community.users[0]?.name || 'Administrador';
                     const planName = PLAN_NAMES[plan] || 'Básico';
                     for (const email of adminEmails) {
-                        await this.mailService.sendSubscriptionConfirmation(email, adminName, planName);
+                        await this.mailService.sendSubscriptionConfirmation(email, adminName, planName).catch(() => null);
                     }
                 }
                 break;
@@ -209,7 +209,7 @@ export class BillingController {
                         ['ADMIN', 'PRESIDENT'].includes(u.role)
                     );
                     for (const user of adminUsers) {
-                        await this.mailService.sendPaymentFailed(user.email, user.name);
+                        await this.mailService.sendPaymentFailed(user.email, user.name).catch(() => null);
                     }
                 }
                 break;

@@ -71,12 +71,13 @@ export default function NeighborsPage() {
             });
 
             if (res.ok) {
+                const data = await res.json();
                 setShowForm(false);
                 setNewName('');
                 setNewEmail('');
                 setNewUnit('');
                 fetchData();
-                alert(`✅ Vecino creado correctamente.\nContraseña temporal: password123`);
+                alert(`✅ Vecino creado correctamente.\nContraseña temporal: ${data.temporaryPassword}\n\nEl vecino recibirá un email con sus credenciales de acceso.`);
             } else {
                 const errData = await res.json();
                 alert(`❌ Error: ${errData.message || 'Error desconocido'}`);
