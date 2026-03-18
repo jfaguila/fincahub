@@ -1,0 +1,311 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//FincaHub//LinkedIn Posts Calendar//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:LinkedIn Posts — asistencia.io
+X-WR-TIMEZONE:Europe/Madrid
+X-WR-CALDESC:Calendario de publicaciones LinkedIn 4 semanas — Jorge Fernández Águila
+
+BEGIN:VEVENT
+UID:linkedin-s1-lun-20260323@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260323T083000
+DTEND;TZID=Europe/Madrid:20260323T090000
+SUMMARY:🔵 LinkedIn | Semana 1 Lun — DATO/ESTADÍSTICA
+DESCRIPTION:El 73% de las llamadas a negocios se pierden fuera de horario.\n\nY cada llamada perdida es un cliente que se va a la competencia.\n\nEn un despacho de abogados de 4 personas\, eso puede ser:\n→ 3-4 consultas perdidas al día\n→ ~20 a la semana\n→ ~80 al mes\n\nA un ticket medio de 300€\, son 24.000€ mensuales que se van.\n\n¿La solución?\n\nUn asistente virtual con IA que atiende 24/7\, cualifica por tipo de caso y agenda automáticamente.\n\n¿Estáis perdiendo clientes por no contestar a tiempo?\n\n#InteligenciaArtificial #PYMEs #Automatizacion #Abogados
+CATEGORIES:LinkedIn
+COLOR:BLUE
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s1-mar-20260324@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260324T130000
+DTEND;TZID=Europe/Madrid:20260324T140000
+SUMMARY:🔵 LinkedIn | Semana 1 Mar — CASO DE ÉXITO
+DESCRIPTION:Un despacho de abogados en Granada me llamó con este problema:\n\n"Sabemos que perdemos clientes fuera de horario\, pero no sabemos cuántos ni cómo solucionarlo."\n\nImplementamos nuestro asistente de IA. En 2 semanas.\n\nResultado al mes 1:\n✅ 0% de consultas perdidas\n✅ 15h/semana recuperadas de trabajo administrativo\n✅ +35% en captación de nuevos clientes\n✅ ROI de 4x\n\nLo más interesante: el despacho ni siquiera sabía exactamente cuánto estaba perdiendo hasta que lo medimos.\n\nSi tienes un negocio orientado a servicios\, ¿sabes cuántas oportunidades estás dejando escapar fuera de horario?\n\n#IA #Abogados #Granada #CasoDeExito #Automatizacion
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s1-mie-20260325@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260325T090000
+DTEND;TZID=Europe/Madrid:20260325T100000
+SUMMARY:🔵 LinkedIn | Semana 1 Mié — EDUCATIVO/TUTORIAL
+DESCRIPTION:3 señales de que tu negocio necesita un asistente virtual con IA:\n\n1️⃣ Pierdes consultas/leads fuera de horario\nSi tu teléfono suena a las 20:00 y no hay nadie\, ese cliente ya llamó al siguiente.\n\n2️⃣ Tu equipo dedica más de 2h/día a tareas administrativas de atención\nFiltrar llamadas\, coordinar citas\, pedir documentación... es tiempo que no factura.\n\n3️⃣ Tus clientes llegan a la primera reunión sin la información necesaria\nPrimera cita improductiva = mala experiencia + tiempo perdido.\n\nSi te identificas con 1 de las 3\, el ROI de un asistente IA sería positivo desde el primer mes.\n\n¿Con cuántas te identificas?\n\n#PYME #Automatizacion #IA #ProductividadEmpresarial
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s1-jue-20260326@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260326T083000
+DTEND;TZID=Europe/Madrid:20260326T093000
+SUMMARY:🔵 LinkedIn | Semana 1 Jue — OPINIÓN/TENDENCIA
+DESCRIPTION:Las PYMEs que no adopten IA en los próximos 2 años perderán un 30% de cuota de mercado frente a las que sí lo hagan.\n\nNo es una predicción. Es lo que ya está ocurriendo en sectores como el legal\, la salud y la hostelería.\n\nPero hay una diferencia clave entre la IA de 2023 y la de 2026:\n\nAntes: prometía mucho\, entregaba poco.\nAhora: los resultados son medibles\, inmediatos y replicables.\n\nEl problema ya no es si la IA funciona.\nEl problema es si tu negocio está en posición de aprovecharla.\n\n¿Qué está haciendo tu sector en materia de IA?\n\n#TendenciasIA #FuturoDelTrabajo #InteligenciaArtificial #PYME
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s1-vie-20260327@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260327T130000
+DTEND;TZID=Europe/Madrid:20260327T140000
+SUMMARY:🔵 LinkedIn | Semana 1 Vie — CTA SUAVE
+DESCRIPTION:Estamos buscando 5 empresas en España que quieran probar nuestro asistente virtual de IA.\n\nOfrecemos:\n✅ Implementación gratuita\n✅ Primer mes sin coste\n✅ Sin permanencia\n\n¿Qué hace el asistente?\n→ Atiende a tus clientes 24/7 por web\, WhatsApp y teléfono\n→ Cualifica leads y agenda citas\n→ Se integra con tu CRM y calendario\n\nSolo 5 plazas. Si quieres una demo de 15 min\, comenta "INFO" o escríbeme por DM.\n\nasistencia.io 🚀\n\n#IA #Chatbot #AsistenteVirtual #PYME #Automatizacion
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s2-lun-20260330@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260330T083000
+DTEND;TZID=Europe/Madrid:20260330T093000
+SUMMARY:🟢 LinkedIn | Semana 2 Lun — ABOGADOS
+DESCRIPTION:¿Sabes cuánto pierde un despacho de abogados por no atender fuera de horario?\n\nHice el cálculo con uno de nuestros clientes:\n\n• Llamadas perdidas/semana: ~18\n• % que eran clientes potenciales: ~30%\n• Honorarios medios por cliente: 450€\n• Pérdida estimada mensual: 9.720€\n\nImplementamos un asistente de IA en 2 semanas.\nCoste: 149€/mes.\n\nEl sistema se pagó en las primeras 3 horas de funcionamiento.\n\n¿Cuánto está perdiendo tu despacho?\n\n(Si quieres que hagamos el cálculo juntos\, escríbeme)\n\n#Abogados #DespachoDeAbogados #IA #Automatizacion #Granada
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s2-mar-20260331@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260331T130000
+DTEND;TZID=Europe/Madrid:20260331T140000
+SUMMARY:🟢 LinkedIn | Semana 2 Mar — CLÍNICAS DENTALES
+DESCRIPTION:El problema silencioso de las clínicas dentales:\n\nEl no-show.\n\nUn hueco de 45 minutos en la agenda de un dentista = 80-150€ perdidos.\nSi ocurre 3 veces al día: 240-450€ diarios.\nAl mes: 5.000-10.000€ en ingresos volátiles.\n\nLa solución más efectiva que hemos visto:\nRecordatorio automático por WhatsApp 24h y 2h antes.\nCon confirmación con un solo clic.\nSi cancela → la cita se libera y le ofrecemos el hueco a la lista de espera.\n\nResultado medio en nuestros clientes del sector dental: reducción del 40% en no-shows.\n\n¿Cuánto supone eso en tu clínica?\n\n#Dentistas #ClinicaDental #NoShow #AutomatizacionSalud
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s2-mie-20260401@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260401T090000
+DTEND;TZID=Europe/Madrid:20260401T100000
+SUMMARY:🟢 LinkedIn | Semana 2 Mié — COMPARATIVA TIPOS IA
+DESCRIPTION:Chatbot\, asistente virtual y agente de voz: ¿cuál necesita tu negocio?\n\n📱 CHATBOT WEB/WHATSAPP\n→ Para: responder preguntas frecuentes\, cualificar leads\, agendar citas\n→ Canal: texto (web\, WhatsApp\, Instagram)\n→ Ideal para: despachos\, clínicas\, inmobiliarias\, e-commerce\n\n🎙️ AGENTE DE VOZ\n→ Para: atender llamadas telefónicas con voz natural\n→ Canal: teléfono\n→ Ideal para: restaurantes\, hoteles\, negocios con alto volumen de llamadas\n\n🤖 ASISTENTE OMNICANAL\n→ Chatbot + Voz + Integración CRM\n→ Para: empresas que quieren cubrir todos los canales\n→ Mayor ROI\, mayor inversión inicial\n\nLa clave: no necesitas los tres desde el principio.\nEmpieza por el canal donde más pierdes.\n\n¿Cuál es el tuyo?\n\n#IA #Chatbot #AgenteDeVoz #AutomatizacionEmpresarial
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s2-jue-20260402@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260402T083000
+DTEND;TZID=Europe/Madrid:20260402T093000
+SUMMARY:🟢 LinkedIn | Semana 2 Jue — INMOBILIARIAS
+DESCRIPTION:El 70% de los compradores de inmuebles contactan fuera del horario de oficina.\n\nPor la noche\, el fin de semana\, en un descanso del trabajo.\n\n¿Qué pasa si tu agencia no responde en las primeras 2 horas?\n\nEl comprador continúa en el portal.\nVe 3 inmuebles más.\nUno de los agentes le responde en 15 minutos.\nEse agente cierra la visita.\n\nAsí de simple. Y así de rápido se pierde una operación.\n\nNuestros clientes del sector inmobiliario han resuelto esto con un asistente que responde a todos los leads de los portales en tiempo real\, los cualifica y agenda la visita automáticamente.\n\n+28% en tasa de cierre en el primer trimestre.\n\n¿Cuántas operaciones estás dejando escapar?\n\n#Inmobiliaria #SectorInmobiliario #IA #PropTech
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s2-vie-20260403@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260403T130000
+DTEND;TZID=Europe/Madrid:20260403T140000
+SUMMARY:🟢 LinkedIn | Semana 2 Vie — BEHIND THE SCENES
+DESCRIPTION:Lo que nadie te cuenta sobre implementar IA en tu empresa:\n\n❌ No es mágico ni instantáneo\n❌ No sustituye a tu equipo (lo potencia)\n❌ No funciona sin configuración específica para tu negocio\n❌ No es tan caro como crees\n\n✅ Requiere 30 minutos de tu tiempo para configurarlo\n✅ Funciona en paralelo con lo que ya tienes\n✅ El ROI es medible desde el primer mes\n✅ El primer mes lo regalamos (para que lo veas antes de comprometerte)\n\nLa mayor barrera no es el coste ni la tecnología.\n\nEs el miedo a cambiar algo que "funciona".\n\n¿Qué te frena a ti?\n\n#IA #TransformacionDigital #PYME #Automatizacion
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s3-lun-20260406@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260406T083000
+DTEND;TZID=Europe/Madrid:20260406T093000
+SUMMARY:🟡 LinkedIn | Semana 3 Lun — DATO LOCAL GRANADA
+DESCRIPTION:Hay más de 3.200 empresas en el PTS de Granada.\n\nY la mayoría todavía no usan IA de forma práctica en su operativa diaria.\n\nNo porque no quieran.\nSino porque las soluciones disponibles son o muy complejas o muy caras.\n\nEn asistencia.io llevamos meses desarrollando una solución específica para la PYME española.\nImplementación en 2 semanas. Sin equipo técnico. Sin contratos.\n\nSi tienes un negocio en Granada y quieres ser de los primeros en adoptarla\, escríbeme.\n\nEstamos ofreciendo condiciones especiales para los primeros clientes locales.\n\n#Granada #PTSGranada #OnGranada #IA #Startups
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s3-mar-20260407@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260407T130000
+DTEND;TZID=Europe/Madrid:20260407T140000
+SUMMARY:🟡 LinkedIn | Semana 3 Mar — PROCESO DE DEMO
+DESCRIPTION:Así es nuestra demo de 15 minutos (sin humo\, te lo cuento todo):\n\n📍 Minuto 0-3: Te pregunto cómo funciona tu negocio\n¿Cómo captas clientes? ¿Cuál es tu mayor dolor en atención al cliente?\n\n📍 Minuto 3-8: Te muestro el asistente en directo\nLo vemos funcionar con un caso real similar al tuyo. Preguntas difíciles incluidas.\n\n📍 Minuto 8-12: Calculamos tu ROI juntos\n¿Cuántas consultas pierdes a la semana? ¿Cuánto vale cada cliente? El número sale solo.\n\n📍 Minuto 12-15: Siguiente paso\nSi tiene sentido para ti\, te cuento cómo es la implementación. Si no\, te voy igual.\n\nSin presión. Sin pitch agresivo.\n\n¿Agendamos?\n\n#IA #Ventas #B2B #AutomatizacionEmpresarial #asistenciaio
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s3-mie-20260408@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260408T090000
+DTEND;TZID=Europe/Madrid:20260408T100000
+SUMMARY:🟡 LinkedIn | Semana 3 Mié — MITO/DESMITIFICACIÓN
+DESCRIPTION:"La IA no puede sustituir la atención personalizada de una persona."\n\nTotalmente de acuerdo. Y no es lo que hacemos.\n\nLo que hace un asistente de IA bien configurado:\n\n→ Atiende las consultas rutinarias (¿cuánto cobráis? ¿tenéis hueco el martes?)\n→ Cualifica al cliente antes de que llegue a una persona\n→ Recoge la información necesaria para que la reunión humana sea productiva\n\nLo que NO hace:\n→ Sustituir la empatía de un abogado en una situación difícil\n→ Cerrar ventas complejas\n→ Construir relaciones\n\nLa combinación ganadora: IA para el trabajo repetitivo\, humanos para el trabajo de valor.\n\n¿Cuántas horas dedica tu equipo a lo primero?\n\n#IA #HumanizacionDigital #PYME #FuturoDelTrabajo
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s3-jue-20260409@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260409T083000
+DTEND;TZID=Europe/Madrid:20260409T093000
+SUMMARY:🟡 LinkedIn | Semana 3 Jue — RESTAURANTES
+DESCRIPTION:Un restaurante con 60 cubiertos recibe de media 40 llamadas al día para reservas.\n\nCada llamada: ~3 minutos.\nTotal: 2 horas diarias de trabajo de sala dedicadas solo a coger el teléfono.\n\nMientras tanto\, la gente espera en las mesas\, el ritmo se interrumpe\, y hay llamadas que no se cogen.\n\nNuestros clientes del sector restauración han automatizado las reservas por WhatsApp:\n→ El cliente escribe\, el asistente confirma disponibilidad y reserva\n→ Recordatorio automático 24h antes\n→ Si cancela → el hueco se cubre con la lista de espera\n\nResultado: 0 llamadas perdidas\, 5h/semana recuperadas\, 35% menos no-shows.\n\n¿Cuánto tiempo dedica tu equipo al teléfono?\n\n#Restaurantes #Hosteleria #AutomatizacionHosteleria #IA
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s3-vie-20260410@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260410T130000
+DTEND;TZID=Europe/Madrid:20260410T140000
+SUMMARY:🟡 LinkedIn | Semana 3 Vie — CTA DIRECTO
+DESCRIPTION:Si llevas semanas pensando en automatizar la atención al cliente de tu negocio pero no sabes por dónde empezar:\n\nEscríbeme esta semana y te doy:\n1️⃣ Una demo de 15 min de cómo funcionaría en tu negocio concreto\n2️⃣ Un cálculo real de cuánto podrías ahorrar/ganar\n3️⃣ Un plan de implementación de 2 semanas\n\nSin coste. Sin compromiso. Sin palabrería.\n\nSi después de la demo no ves el valor\, no pasa nada.\n\nPero si lo ves... el primer mes es gratis.\n\nDM o comentario "DEMO" 👇\n\n#IA #PYME #Automatizacion #asistenciaio
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s4-lun-20260413@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260413T083000
+DTEND;TZID=Europe/Madrid:20260413T093000
+SUMMARY:🔴 LinkedIn | Semana 4 Lun — ROI NUMÉRICO
+DESCRIPTION:¿Cuánto ROI da realmente un asistente virtual con IA?\n\nTe doy los números reales de uno de nuestros clientes (despacho de abogados\, 3 personas):\n\n📊 ANTES (mensual):\n- Consultas perdidas fuera de horario: ~80\n- Tiempo en tareas admin de atención: 60h\n- Coste oportunidad estimado: 9.600€\n\n📊 DESPUÉS (mes 1):\n- Consultas perdidas: 0\n- Tiempo en tareas admin: 8h (-52h)\n- Nuevos clientes captados: +12\n- Ingresos adicionales estimados: 5.400€\n- Coste del servicio: 149€\n\nROI primer mes: 35x\n\nNo todos los negocios tendrán este resultado. Pero si tu negocio depende de atender bien y rápido a los clientes\, el número siempre sale positivo.\n\n¿Hacemos el cálculo con tu negocio?\n\n#ROI #IA #CasosDeExito #AutomatizacionEmpresarial
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s4-mar-20260414@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260414T130000
+DTEND;TZID=Europe/Madrid:20260414T140000
+SUMMARY:🔴 LinkedIn | Semana 4 Mar — TESTIMONIO
+DESCRIPTION:"Antes de asistencia.io\, cada mañana llegaba al despacho con la ansiedad de no saber cuántas llamadas me había perdido la noche anterior.\n\nAhora llego con 3-4 consultas nuevas ya cualificadas y agendadas esperándome.\n\nLa diferencia no es solo económica. Es la tranquilidad de saber que tu negocio no para cuando tú paras."\n\n— Carlos J.\, Abogado penalista\, Granada.\n\nEsto es lo que buscamos cuando trabajamos con cada cliente: que el negocio funcione cuando el dueño no está mirando.\n\n¿Cuándo fue la última vez que tu negocio trabajó por ti mientras dormías?\n\n#Testimonios #IA #Automatizacion #Abogados
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s4-mie-20260415@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260415T090000
+DTEND;TZID=Europe/Madrid:20260415T100000
+SUMMARY:🔴 LinkedIn | Semana 4 Mié — GUÍA 5 PASOS
+DESCRIPTION:La guía que ojalá hubiera tenido cuando empecé a automatizar mi negocio:\n\n5 pasos para implementar IA en una PYME sin equipo técnico:\n\n1️⃣ Identifica el proceso que más tiempo consume\n(Generalmente: atención inicial\, cualificación de leads\, agendamiento)\n\n2️⃣ Define el resultado ideal\n¿Qué debería hacer el asistente exactamente? ¿Qué información necesita recoger?\n\n3️⃣ Elige solo UN canal para empezar\nWhatsApp si recibes muchos mensajes. Web si tienes tráfico. Teléfono si recibes muchas llamadas.\n\n4️⃣ Configura\, prueba y ajusta antes de lanzar\nHazle las preguntas más difíciles que te haría un cliente real.\n\n5️⃣ Mide durante 30 días\nLeads captados\, tiempo ahorrado\, satisfacción de clientes. Solo con datos puedes mejorar.\n\n¿En qué paso te atascas?\n\n#GuiaIA #TransformacionDigital #PYME #Automatizacion
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s4-jue-20260416@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260416T083000
+DTEND;TZID=Europe/Madrid:20260416T093000
+SUMMARY:🔴 LinkedIn | Semana 4 Jue — URGENCIA/ESCASEZ
+DESCRIPTION:Cerramos el programa piloto de asistencia.io el próximo viernes.\n\nLo que incluye (y que después dejará de ser gratuito):\n→ Setup e implementación: 800€ de valor\, gratis para los últimos 2 spots\n→ Primer mes sin coste\n→ Precio bloqueado en 149€/mes (después: 299€)\n\n¿Por qué damos esto gratis?\nPorque necesitamos 5 clientes de referencia con casos de uso reales y testimonios.\nA cambio de las condiciones\, pedimos una reseña honesta al mes 1.\n\nSi te interesa\, escríbeme hoy.\nSi no\, no hay problema — habrá nuevas plazas en el futuro con precio normal.\n\n#Oferta #Lanzamiento #IA #PYME #asistenciaio
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:linkedin-s4-vie-20260417@asistencia.io
+DTSTART;TZID=Europe/Madrid:20260417T130000
+DTEND;TZID=Europe/Madrid:20260417T140000
+SUMMARY:🔴 LinkedIn | Semana 4 Vie — REFLEXIÓN CIERRE
+DESCRIPTION:Hace un año\, la IA era una promesa.\n\nHoy es una ventaja competitiva que algunos ya están usando y otros todavía están ignorando.\n\nDentro de 2 años será un estándar. Y quien no la haya implementado estará en desventaja.\n\nLa pregunta no es si deberías adoptar IA en tu negocio.\nLa pregunta es cuándo.\n\nCuanto antes empieces\, más ventaja acumulas.\nCuanto más esperes\, más difícil será recuperar el terreno perdido.\n\n¿En qué punto estás tú?\n\n(Si estás en el "quiero pero no sé cómo"\, escríbeme. Empezamos mañana mismo.)\n\n#IA #FuturoEmpresarial #TransformacionDigital #PYME
+CATEGORIES:LinkedIn
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Publicar post LinkedIn ahora
+END:VALARM
+END:VEVENT
+
+END:VCALENDAR
