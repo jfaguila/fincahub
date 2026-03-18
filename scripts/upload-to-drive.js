@@ -14,7 +14,8 @@
  *   (Este archivo está en .gitignore — nunca se sube al repo)
  *
  * PASO 3 — Ejecutar:
- *   node upload-to-drive.js
+ *   node upload-to-drive.js                          → sube la carpeta Marketing (un nivel arriba)
+ *   node upload-to-drive.js "C:\ruta\a\tus\archivos" → sube cualquier carpeta
  */
 
 const fs   = require('fs');
@@ -33,7 +34,7 @@ try {
 
 // ─── Configuración ────────────────────────────────────────────────────────────
 
-const MARKETING_ROOT  = path.join(__dirname, '..');
+const MARKETING_ROOT  = process.argv[2] ? path.resolve(process.argv[2]) : path.join(__dirname, '..');
 const TAMI_CREDS_PATH = path.join(__dirname, 'tami.json');
 const DRIVE_FOLDER    = 'asistencia.io — Marketing 2026';
 
@@ -125,6 +126,7 @@ async function main() {
   console.log('');
   console.log('🚀 Subir Marketing a Google Drive — asistencia.io');
   console.log('==================================================');
+  console.log(`\n📁 Carpeta origen: ${MARKETING_ROOT}`);
 
   const files = collectFiles(MARKETING_ROOT);
   console.log(`\n📂 Archivos encontrados: ${files.length}`);
@@ -132,6 +134,8 @@ async function main() {
 
   if (files.length === 0) {
     console.log('\n⚠️  No hay archivos que subir en:', MARKETING_ROOT);
+    console.log('   Pasa la ruta como argumento:');
+    console.log('   node upload-to-drive.js "C:\\ruta\\a\\tus\\archivos"\n');
     return;
   }
 
