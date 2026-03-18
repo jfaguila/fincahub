@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrategia de Marketing — FincaHub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --dark: #0f172a;
+    --gray: #64748b;
+    --light: #f8fafc;
+    --border: #e2e8f0;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: var(--dark);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  /* ── PORTADA ─────────────────────────────── */
+  .cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+    top: -100px; left: -100px;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    bottom: -100px; right: -100px;
+  }
+  .cover-logo {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    position: relative; z-index: 1;
+  }
+  .cover-agency {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    position: relative; z-index: 1;
+  }
+  .cover h1 {
+    font-size: 52px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .cover h1 span {
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cover-subtitle {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 60px;
+    font-weight: 300;
+    position: relative; z-index: 1;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    position: relative; z-index: 1;
+  }
+  .cover-meta-item {
+    text-align: center;
+  }
+  .cover-meta-item .label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .cover-meta-item .value {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+  }
+  .cover-divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    border-radius: 2px;
+    margin: 30px auto;
+    position: relative; z-index: 1;
+  }
+
+  /* ── PÁGINA ──────────────────────────────── */
+  .page {
+    padding: 50px 50px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ── HEADER DE SECCIÓN ───────────────────── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-number {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: white;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 22px; font-weight: 800; color: var(--dark); }
+  .section-tag {
+    margin-left: auto;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: rgba(59,130,246,0.08);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(59,130,246,0.2);
+  }
+
+  /* ── DIAGNÓSTICO ─────────────────────────── */
+  .diag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .diag-card {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .diag-card h3 {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gray);
+    margin-bottom: 12px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 10.5px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .num {
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(139,92,246,0.06));
+    border: 1px solid rgba(139,92,246,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .highlight-box p {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.7;
+  }
+  .highlight-box strong { color: var(--purple); }
+
+  /* ── ARQUETIPOS ──────────────────────────── */
+  .archetype-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .archetype-card {
+    border-radius: 14px;
+    padding: 24px 20px;
+    border: 1px solid var(--border);
+  }
+  .archetype-card.blue { border-top: 3px solid var(--blue); }
+  .archetype-card.purple { border-top: 3px solid var(--purple); }
+  .archetype-card.green { border-top: 3px solid var(--green); }
+  .archetype-num {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .blue .archetype-num { color: var(--blue); }
+  .purple .archetype-num { color: var(--purple); }
+  .green .archetype-num { color: var(--green); }
+  .archetype-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .archetype-card .pain {
+    font-size: 10px;
+    color: var(--gray);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .message-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .blue .message-tag { background: rgba(59,130,246,0.1); color: var(--blue); }
+  .purple .message-tag { background: rgba(139,92,246,0.1); color: var(--purple); }
+  .green .message-tag { background: rgba(16,185,129,0.1); color: var(--green); }
+
+  /* ── PILARES ─────────────────────────────── */
+  .pillar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    background: var(--light);
+  }
+  .pillar-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .pillar-row h3 { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .pillar-row p { font-size: 10px; color: var(--gray); }
+  .pillar-row .tag {
+    margin-left: auto;
+    font-size: 9px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .tag-auto { background: rgba(16,185,129,0.12); color: var(--green); }
+  .tag-manual { background: rgba(245,158,11,0.12); color: var(--orange); }
+  .tag-hybrid { background: rgba(139,92,246,0.12); color: var(--purple); }
+
+  /* ── CONTENIDO / PILAR DETAIL ────────────── */
+  .pilar-detail {
+    margin-bottom: 28px;
+  }
+  .pilar-detail h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pilar-detail h3 .badge {
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .pilar-detail h4 {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 14px 0 8px;
+  }
+  .article-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .article-list li {
+    font-size: 10px;
+    color: var(--dark);
+    padding: 7px 12px 7px 10px;
+    background: var(--light);
+    border-radius: 8px;
+    border-left: 3px solid var(--blue);
+    line-height: 1.4;
+  }
+  .keyword-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .keyword {
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  /* ── ADS CARDS ───────────────────────────── */
+  .ads-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .ad-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ad-card-header {
+    padding: 12px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .ad-google .ad-card-header { background: #4285F4; }
+  .ad-meta .ad-card-header { background: #1877F2; }
+  .ad-linkedin .ad-card-header { background: #0A66C2; }
+  .ad-card-body { padding: 14px; }
+  .ad-card-body p {
+    font-size: 10px;
+    color: var(--dark);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .ad-card-body .budget {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-top: 10px;
+  }
+  .ad-card-body .budget span {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--gray);
+  }
+
+  /* ── B2B SECTION ─────────────────────────── */
+  .benefit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .benefit-card {
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .benefit-card.for-admin {
+    border-top: 3px solid var(--purple);
+    background: rgba(139,92,246,0.02);
+  }
+  .benefit-card.for-fincahub {
+    border-top: 3px solid var(--blue);
+    background: rgba(59,130,246,0.02);
+  }
+  .benefit-card h4 {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .benefit-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .benefit-item .icon { flex-shrink: 0; }
+  .b2b-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .b2b-action {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .b2b-action .num {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .b2b-action h4 { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+  .b2b-action p { font-size: 10px; color: var(--gray); line-height: 1.5; }
+
+  /* ── ONBOARDING TIMELINE ─────────────────── */
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+  .timeline-day {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+  .timeline-content {
+    font-size: 10.5px;
+    color: var(--dark);
+    line-height: 1.5;
+  }
+  .timeline-content strong { color: var(--purple); }
+  .timeline-type {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 7px;
+    border-radius: 8px;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+  .type-email { background: rgba(59,130,246,0.1); color: var(--blue); }
+  .type-inapp { background: rgba(16,185,129,0.1); color: var(--green); }
+  .type-offer { background: rgba(245,158,11,0.1); color: var(--orange); }
+
+  /* ── KPIs / MÉTRICAS ─────────────────────── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 14px;
+    text-align: center;
+    background: var(--light);
+  }
+  .kpi-card .label {
+    font-size: 9px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .kpi-card .m3 { font-size: 14px; font-weight: 800; color: var(--dark); }
+  .kpi-card .m6 { font-size: 11px; font-weight: 600; color: var(--blue); }
+  .kpi-card .m12 { font-size: 11px; font-weight: 600; color: var(--green); }
+  .kpi-card .sublabel {
+    font-size: 8px;
+    color: var(--gray);
+    margin-top: 2px;
+  }
+
+  /* ── PRESUPUESTO ─────────────────────────── */
+  .budget-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .budget-card {
+    border-radius: 14px;
+    padding: 22px 18px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .budget-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .budget-card.phase1::before { background: var(--blue); }
+  .budget-card.phase2::before { background: var(--purple); }
+  .budget-card.phase3::before { background: var(--green); }
+  .budget-card .phase-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 4px;
+  }
+  .budget-card .total {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .phase1 .total { color: var(--blue); }
+  .phase2 .total { color: var(--purple); }
+  .phase3 .total { color: var(--green); }
+  .budget-card .period {
+    font-size: 10px;
+    color: var(--gray);
+    margin-bottom: 16px;
+  }
+  .budget-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border);
+    color: var(--dark);
+  }
+  .budget-line:last-child { border-bottom: none; }
+  .budget-line .amount { font-weight: 700; color: var(--gray); }
+
+  /* ── QUICK WINS ──────────────────────────── */
+  .qw-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .qw-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--light);
+  }
+  .qw-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .qw-icon.auto { background: rgba(16,185,129,0.12); }
+  .qw-icon.manual { background: rgba(245,158,11,0.12); }
+  .qw-content h4 { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+  .qw-content p { font-size: 9.5px; color: var(--gray); line-height: 1.4; }
+  .who-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 8px;
+    margin-top: 5px;
+  }
+  .who-auto { background: rgba(16,185,129,0.12); color: var(--green); }
+  .who-manual { background: rgba(245,158,11,0.12); color: var(--orange); }
+  .who-hybrid { background: rgba(139,92,246,0.12); color: var(--purple); }
+
+  /* ── FOOTER ──────────────────────────────── */
+  .page-footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50px;
+    right: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9px;
+    color: var(--gray);
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+
+  /* ── PRINT ───────────────────────────────── */
+  @media print {
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { page-break-after: always; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  /* ── TABLA ───────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 10.5px; }
+  th {
+    background: var(--dark);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--dark); }
+  tr:hover td { background: var(--light); }
+  tr:last-child td { border-bottom: none; }
+  .td-green { color: var(--green); font-weight: 700; }
+  .td-blue { color: var(--blue); font-weight: 700; }
+  .td-orange { color: var(--orange); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ PORTADA -->
+<div class="cover">
+  <div class="cover-logo">fincahub.com</div>
+  <div class="cover-agency">PROPTECH GROWTH STUDIO · Agencia de Marketing</div>
+  <h1>ESTRATEGIA<br><span>DE MARKETING</span><br>INTEGRAL</h1>
+  <div class="cover-divider"></div>
+  <p class="cover-subtitle">De 0 a 1.200 comunidades en 12 meses</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="label">Cliente</span>
+      <span class="value">FincaHub</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="label">Fecha</span>
+      <span class="value">Marzo 2026</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="label">Versión</span>
+      <span class="value">v1.0</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="label">Mercado</span>
+      <span class="value">España (+ LATAM)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PÁG 1: DIAGNÓSTICO -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <div>
+      <div class="section-title">Diagnóstico y Oportunidad</div>
+    </div>
+    <span class="section-tag">Análisis</span>
+  </div>
+
+  <div class="highlight-box">
+    <p><strong>El producto es sólido. El problema es visibilidad y confianza.</strong><br>
+    FincaHub tiene todo lo que necesita para dominar el mercado español: pricing competitivo, UI moderna, features diferenciadoras (votaciones online, reservas, IA) y modelo freemium sin fricción. El trabajo de marketing es hacer que los decisores correctos lo descubran y confíen lo suficiente para probarlo.</p>
+  </div>
+
+  <div class="diag-grid">
+    <div class="diag-card">
+      <h3>Mercado Objetivo · España</h3>
+      <div class="stat-row"><span>Comunidades de propietarios activas</span><span class="num">~300.000</span></div>
+      <div class="stat-row"><span>Administradores de fincas colegiados</span><span class="num">~8.000</span></div>
+      <div class="stat-row"><span>Ticket anual plan Básico</span><span class="num">€179/año</span></div>
+      <div class="stat-row"><span>Ticket anual plan Profesional</span><span class="num">€359/año</span></div>
+      <div class="stat-row"><span>Ticket anual plan Urbanización</span><span class="num">€719/año</span></div>
+      <div class="stat-row"><span>TAM estimado (solo España)</span><span class="num">>€100M/año</span></div>
+    </div>
+    <div class="diag-card">
+      <h3>Ventajas Competitivas vs Cemmia / Fynkus</h3>
+      <div class="stat-row"><span>✅ Votaciones online con delegación</span><span class="num">Único</span></div>
+      <div class="stat-row"><span>✅ Reserva de espacios comunes</span><span class="num">Único</span></div>
+      <div class="stat-row"><span>✅ UI moderna (glassmorphism)</span><span class="num">Único</span></div>
+      <div class="stat-row"><span>✅ IA en procesado de documentos</span><span class="num">Único</span></div>
+      <div class="stat-row"><span>✅ SEPA ISO 20022 automático</span><span class="num">Único</span></div>
+      <div class="stat-row"><span>✅ 30 días gratis sin tarjeta</span><span class="num">Ventaja</span></div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:30px;">
+    <div class="section-number" style="background:linear-gradient(135deg,#10b981,#3b82f6);">2</div>
+    <div class="section-title">Los 3 Arquetipos de Cliente</div>
+  </div>
+
+  <div class="archetype-grid">
+    <div class="archetype-card blue">
+      <div class="archetype-num">01</div>
+      <h3>Presidente de Comunidad</h3>
+      <p class="pain">Autogestión. Pierde horas en cuentas, WhatsApp y papeles. No tiene formación administrativa.</p>
+      <span class="message-tag">"Tu comunidad se gestiona sola"</span>
+    </div>
+    <div class="archetype-card purple">
+      <div class="archetype-num">02</div>
+      <h3>Administrador de Fincas</h3>
+      <p class="pain">Gestiona 10–30 comunidades con Excel y herramientas legacy. Necesita escalar sin contratar.</p>
+      <span class="message-tag">"Multiplica tu cartera"</span>
+    </div>
+    <div class="archetype-card green">
+      <div class="archetype-num">03</div>
+      <h3>Promotor de Urbanización</h3>
+      <p class="pain">Nueva urbanización. Necesita digitalizar desde el primer día y ofrecer valor a los vecinos.</p>
+      <span class="message-tag">"Empieza bien desde el inicio"</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PÁG 2: PILARES -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <div class="section-title">Los 5 Pilares de la Estrategia</div>
+    <span class="section-tag">Visión Global</span>
+  </div>
+
+  <div class="pillar-row">
+    <div class="pillar-icon" style="background:rgba(59,130,246,0.12);">📝</div>
+    <div>
+      <h3>PILAR 1 — Contenido + SEO</h3>
+      <p>Blog de autoridad, artículos posicionados, recursos gratuitos y lead magnets para captura orgánica sostenible.</p>
+    </div>
+    <span class="tag tag-hybrid">Parcialmente automatizable</span>
+  </div>
+  <div class="pillar-row">
+    <div class="pillar-icon" style="background:rgba(139,92,246,0.12);">📢</div>
+    <div>
+      <h3>PILAR 2 — Paid Ads</h3>
+      <p>Google Ads, Meta Ads y LinkedIn Ads para generar demanda y capturar búsquedas de alta intención.</p>
+    </div>
+    <span class="tag tag-manual">Acción humana</span>
+  </div>
+  <div class="pillar-row">
+    <div class="pillar-icon" style="background:rgba(16,185,129,0.12);">🤝</div>
+    <div>
+      <h3>PILAR 3 — Canal B2B (Administradores)</h3>
+      <p>Programa de partners "FincaHub Pro", convenios con colegios, outbound y presencia en ferias del sector.</p>
+    </div>
+    <span class="tag tag-manual">Acción humana</span>
+  </div>
+  <div class="pillar-row">
+    <div class="pillar-icon" style="background:rgba(245,158,11,0.12);">🔥</div>
+    <div>
+      <h3>PILAR 4 — Comunidad + Viral</h3>
+      <p>Programa de referidos, reviews y casos de éxito, redes sociales y contenido orgánico viral.</p>
+    </div>
+    <span class="tag tag-hybrid">Parcialmente automatizable</span>
+  </div>
+  <div class="pillar-row">
+    <div class="pillar-icon" style="background:rgba(239,68,68,0.12);">🎯</div>
+    <div>
+      <h3>PILAR 5 — Conversión + Retención</h3>
+      <p>Onboarding activado por comportamiento, secuencias de email del trial y estrategia de upsell automático.</p>
+    </div>
+    <span class="tag tag-auto">100% automatizable</span>
+  </div>
+
+  <div class="section-header" style="margin-top:30px;">
+    <div class="section-number" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">4</div>
+    <div class="section-title">Presupuesto por Fases</div>
+  </div>
+
+  <div class="budget-grid">
+    <div class="budget-card phase1">
+      <div class="phase-label">Fase 1 · Meses 1–3</div>
+      <div class="total">€2.500<span style="font-size:14px;font-weight:500;color:#64748b">/mes</span></div>
+      <div class="period">Fundación y primeras pruebas</div>
+      <div class="budget-line"><span>Google Ads</span><span class="amount">€800</span></div>
+      <div class="budget-line"><span>Meta Ads</span><span class="amount">€600</span></div>
+      <div class="budget-line"><span>LinkedIn Ads</span><span class="amount">€400</span></div>
+      <div class="budget-line"><span>Contenido/SEO</span><span class="amount">€400</span></div>
+      <div class="budget-line"><span>Herramientas</span><span class="amount">€300</span></div>
+    </div>
+    <div class="budget-card phase2">
+      <div class="phase-label">Fase 2 · Meses 4–6</div>
+      <div class="total">€5.000<span style="font-size:14px;font-weight:500;color:#64748b">/mes</span></div>
+      <div class="period">Aceleración y escala</div>
+      <div class="budget-line"><span>Ads escalado</span><span class="amount">€2.500</span></div>
+      <div class="budget-line"><span>B2B + Eventos</span><span class="amount">€1.000</span></div>
+      <div class="budget-line"><span>Producción video</span><span class="amount">€800</span></div>
+      <div class="budget-line"><span>Micro-influencers</span><span class="amount">€700</span></div>
+    </div>
+    <div class="budget-card phase3">
+      <div class="phase-label">Fase 3 · Mes 7+</div>
+      <div class="total">€10.000<span style="font-size:14px;font-weight:500;color:#64748b">/mes</span></div>
+      <div class="period">Escala + Portugal y LATAM</div>
+      <div class="budget-line"><span>Canales probados</span><span class="amount">Escala</span></div>
+      <div class="budget-line"><span>Portugal + LATAM</span><span class="amount">Nuevo</span></div>
+      <div class="budget-line"><span>Partners B2B</span><span class="amount">Consolida</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PÁG 3: SEO + ADS -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">5</div>
+    <div class="section-title">Pilar 1 — Contenido + SEO</div>
+    <span class="section-tag">Orgánico</span>
+  </div>
+
+  <div class="pilar-detail">
+    <h4>Blog "El Blog del Presidente" — Artículos de alta intención</h4>
+    <ul class="article-list">
+      <li>Cómo hacer las cuentas de una comunidad de vecinos paso a paso</li>
+      <li>Modelo de convocatoria de junta de propietarios 2026 [Plantilla gratis]</li>
+      <li>Cómo cobrar deudas a vecinos morosos sin ir al juzgado</li>
+      <li>Ley de Propiedad Horizontal: qué puede y no puede hacer el presidente</li>
+      <li>Mejores apps para comunidades de vecinos 2026 [Comparativa]</li>
+      <li>Cómo hacer votaciones online legales en tu comunidad</li>
+      <li>SEPA y domiciliación bancaria en comunidades: guía completa</li>
+      <li>FincaHub vs Cemmia: análisis honesto 2026</li>
+    </ul>
+
+    <h4>Keywords objetivo (SEO técnico)</h4>
+    <div class="keyword-cloud">
+      <span class="keyword">software gestión comunidades vecinos</span>
+      <span class="keyword">app administrador fincas</span>
+      <span class="keyword">programa contabilidad comunidad propietarios</span>
+      <span class="keyword">gestión incidencias comunidad</span>
+      <span class="keyword">votaciones online junta propietarios</span>
+      <span class="keyword">reserva espacios comunidad vecinos</span>
+      <span class="keyword">morosos comunidad vecinos</span>
+      <span class="keyword">convocatoria junta propietarios plantilla</span>
+    </div>
+
+    <h4>Lead Magnets (recursos gratuitos de alto valor)</h4>
+    <div class="diag-grid">
+      <div class="diag-card">
+        <h3>📄 Pack Presidente</h3>
+        <div class="stat-row"><span>Acta de junta</span><span class="num">Word/PDF</span></div>
+        <div class="stat-row"><span>Convocatoria oficial</span><span class="num">Word/PDF</span></div>
+        <div class="stat-row"><span>Carta a vecino moroso</span><span class="num">Word/PDF</span></div>
+        <div class="stat-row"><span>Presupuesto anual</span><span class="num">Excel</span></div>
+      </div>
+      <div class="diag-card">
+        <h3>🔧 Herramientas Interactivas</h3>
+        <div class="stat-row"><span>Calculadora de cuotas</span><span class="num">Web</span></div>
+        <div class="stat-row"><span>Guía RGPD comunidades 2026</span><span class="num">PDF</span></div>
+        <div class="stat-row"><span>Checklist junta anual</span><span class="num">PDF</span></div>
+        <div class="stat-row"><span>Plantilla presupuesto</span><span class="num">Excel</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-number">6</div>
+    <div class="section-title">Pilar 2 — Paid Ads</div>
+    <span class="section-tag">Pago</span>
+  </div>
+
+  <div class="ads-grid">
+    <div class="ad-card ad-google">
+      <div class="ad-card-header">Google Ads</div>
+      <div class="ad-card-body">
+        <p><strong>Campaña 1 · Bottom-funnel</strong><br>Keywords de alta intención. Landing: /pricing con CTA "30 días gratis"</p>
+        <p><strong>Campaña 2 · Competencia</strong><br>Búsquedas de marcas competidoras + alternativas</p>
+        <p><strong>Campaña 3 · Problemas</strong><br>"cobrar morosos", "votaciones junta online"</p>
+        <div class="budget">€800 <span>/ mes inicial</span></div>
+      </div>
+    </div>
+    <div class="ad-card ad-meta">
+      <div class="ad-card-header">Meta Ads · FB + IG</div>
+      <div class="ad-card-body">
+        <p><strong>Video "Antes vs Después"</strong><br>WhatsApp caótico → FincaHub, 5 min al mes</p>
+        <p><strong>Carrusel de features</strong><br>"¿Sabías que puedes votar desde el móvil?"</p>
+        <p><strong>Testimonial Ads</strong><br>Videos cortos de presidentes reales</p>
+        <div class="budget">€600 <span>/ mes inicial</span></div>
+      </div>
+    </div>
+    <div class="ad-card ad-linkedin">
+      <div class="ad-card-header">LinkedIn Ads · B2B</div>
+      <div class="ad-card-body">
+        <p><strong>Target:</strong> Administradores de fincas y gestores de propiedades en España</p>
+        <p><strong>Formato:</strong> Lead Gen Form → descarga guía → demo</p>
+        <p><strong>Mensaje:</strong> "¿Gestionas más de 5 comunidades con Excel?"</p>
+        <div class="budget">€400 <span>/ mes inicial</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PÁG 4: B2B + VIRAL -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">7</div>
+    <div class="section-title">Pilar 3 — Canal B2B · Administradores de Fincas</div>
+    <span class="section-tag">Mayor Multiplicador</span>
+  </div>
+
+  <div class="highlight-box">
+    <p>Un administrador de fincas profesional que adopta FincaHub trae consigo un promedio de <strong>15–25 comunidades de golpe</strong>. Con ~8.000 administradores colegiados en España, este es el canal con mayor ROI potencial de toda la estrategia.</p>
+  </div>
+
+  <h4 style="font-size:12px;font-weight:700;margin-bottom:12px;">Programa de Partners "FincaHub Pro"</h4>
+  <div class="benefit-grid">
+    <div class="benefit-card for-admin">
+      <h4>🏆 Beneficios para el Administrador</h4>
+      <div class="benefit-item"><span class="icon">→</span><span>Panel multi-comunidad unificado en un solo login</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>30% descuento en todas las suscripciones</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>Marca blanca del portal del vecino (logo propio)</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>Soporte prioritario 24/7 dedicado</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>Formación y certificación oficial FincaHub</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>API de integración con sus sistemas</span></div>
+    </div>
+    <div class="benefit-card for-fincahub">
+      <h4>📈 Beneficios para FincaHub</h4>
+      <div class="benefit-item"><span class="icon">→</span><span>Cada partner trae 15–25 comunidades de golpe</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>Churn casi nulo (el admin no cambia de herramienta)</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>CAC muy bajo (una venta, muchas comunidades)</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>Upsell natural a plan Urbanización</span></div>
+      <div class="benefit-item"><span class="icon">→</span><span>Credibilidad y referencia en el sector</span></div>
+    </div>
+  </div>
+
+  <h4 style="font-size:12px;font-weight:700;margin:16px 0 12px;">Acciones de Captación B2B</h4>
+  <div class="b2b-actions">
+    <div class="b2b-action">
+      <div class="num">01</div>
+      <h4>Colegios Profesionales</h4>
+      <p>Convenios con los 52 Colegios de Administradores de Fincas (CGCAFE). Ser "software recomendado". Webinars con créditos formativos.</p>
+    </div>
+    <div class="b2b-action">
+      <div class="num">02</div>
+      <h4>Ferias y Eventos</h4>
+      <p>SIMA (Salón Inmobiliario Madrid), FICHA (Feria Internacional del Condominio), eventos de colegios provinciales.</p>
+    </div>
+    <div class="b2b-action">
+      <div class="num">03</div>
+      <h4>Email Outbound</h4>
+      <p>Secuencia de 5 emails dirigida a directorio de administradores. Tasa objetivo de conversión a demo: 8–12%.</p>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:28px;">
+    <div class="section-number">8</div>
+    <div class="section-title">Pilar 4 — Comunidad + Viral</div>
+    <span class="section-tag">Orgánico</span>
+  </div>
+
+  <div class="diag-grid">
+    <div class="diag-card">
+      <h3>📣 Programa de Referidos</h3>
+      <div class="stat-row"><span>Incentivo</span><span class="num">2 meses gratis</span></div>
+      <div class="stat-row"><span>Trigger</span><span class="num">Dentro del dashboard</span></div>
+      <div class="stat-row"><span>Reviews objetivo (6 meses)</span><span class="num">50 reviews</span></div>
+      <div class="stat-row"><span>Rating objetivo</span><span class="num">4.8★</span></div>
+      <div class="stat-row"><span>Plataformas</span><span class="num">Google, Capterra, G2</span></div>
+    </div>
+    <div class="diag-card">
+      <h3>📱 Redes Sociales</h3>
+      <div class="stat-row"><span>LinkedIn (B2B)</span><span class="num">3–4 posts/sem</span></div>
+      <div class="stat-row"><span>Instagram/TikTok (B2C)</span><span class="num">4–5 reels/sem</span></div>
+      <div class="stat-row"><span>YouTube (SEO vídeo)</span><span class="num">1–2 vídeos/sem</span></div>
+      <div class="stat-row"><span>Tono LinkedIn</span><span class="num">Profesional</span></div>
+      <div class="stat-row"><span>Tono TikTok</span><span class="num">Humor + utilidad</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PÁG 5: ONBOARDING -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">9</div>
+    <div class="section-title">Pilar 5 — Conversión y Retención · Onboarding del Trial</div>
+    <span class="section-tag">100% Automatizable</span>
+  </div>
+
+  <div class="highlight-box">
+    <p><strong>Los 30 días más críticos del negocio.</strong> El 80% de los trials que se dan de baja nunca activaron las features clave. Una secuencia de onboarding por comportamiento puede doblar la tasa de conversión.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-day">Día 1</div>
+      <div class="timeline-content"><strong>Bienvenida + video de inicio rápido (2 min)</strong> <span class="timeline-type type-email">Email</span><br>Introduce la promesa central. Enlace al wizard si no lo completó.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 2</div>
+      <div class="timeline-content"><strong>Acción guiada: "Añade tus primeros vecinos →"</strong> <span class="timeline-type type-inapp">In-app</span><br>Tooltip y modal de bienvenida con paso único y botón de acción.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 4</div>
+      <div class="timeline-content"><strong>"¿Ya viste las votaciones online?"</strong> <span class="timeline-type type-email">Email</span><br>Feature diferenciadora. Demo GIF + CTA para crear la primera votación.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 7</div>
+      <div class="timeline-content"><strong>Tooltip en contabilidad + informe financiero automático</strong> <span class="timeline-type type-inapp">In-app</span> <span class="timeline-type type-email">Email</span><br>"Tu primer informe de cuentas está listo." Muestra balance real de la comunidad.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 14</div>
+      <div class="timeline-content"><strong>"Vas por la mitad del trial — ¿Tienes dudas?"</strong> <span class="timeline-type type-email">Email</span><br>Oferta de videollamada de 20 min con el equipo de éxito. Respuesta directa al founder.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 21</div>
+      <div class="timeline-content"><strong>"7 días para decidir" + testimonial de caso similar</strong> <span class="timeline-type type-email">Email</span><br>Urgencia suave. Caso de éxito de un presidente con perfil idéntico al receptor.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 28</div>
+      <div class="timeline-content"><strong>Oferta: 20% descuento primer mes si activa hoy</strong> <span class="timeline-type type-email">Email</span> <span class="timeline-type type-offer">Oferta</span><br>Urgencia real. Enlace directo a pantalla de pago con descuento pre-aplicado.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-day">Día 30</div>
+      <div class="timeline-content"><strong>Encuesta de salida (NPS + razón)</strong> <span class="timeline-type type-email">Email</span><br>Para los que no convierten. "¿Qué podríamos haber hecho mejor?" — datos para iterar.</div>
+    </div>
+  </div>
+
+  <div class="diag-grid" style="margin-top:10px;">
+    <div class="diag-card">
+      <h3>Objetivos de Conversión</h3>
+      <div class="stat-row"><span>Trial → Plan Básico</span><span class="num">20%</span></div>
+      <div class="stat-row"><span>Trial → Plan Profesional ⭐</span><span class="num">35%</span></div>
+      <div class="stat-row"><span>Trial → Plan Urbanización</span><span class="num">10%</span></div>
+      <div class="stat-row"><span>Churn mensual objetivo</span><span class="num">&lt;3%</span></div>
+      <div class="stat-row"><span>NPS objetivo</span><span class="num">+50</span></div>
+    </div>
+    <div class="diag-card">
+      <h3>Herramientas Recomendadas</h3>
+      <div class="stat-row"><span>Email marketing + CRM</span><span class="num">HubSpot / ActiveCampaign</span></div>
+      <div class="stat-row"><span>Analytics de comportamiento</span><span class="num">Hotjar + Mixpanel</span></div>
+      <div class="stat-row"><span>SEO y keywords</span><span class="num">SEMrush / Ahrefs</span></div>
+      <div class="stat-row"><span>Reviews automáticos</span><span class="num">Trustpilot API</span></div>
+      <div class="stat-row"><span>Scheduling social</span><span class="num">Buffer / Metricool</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ PÁG 6: KPIs -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">10</div>
+    <div class="section-title">KPIs y Proyección a 12 Meses</div>
+    <span class="section-tag">Métricas</span>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="label">Trials / mes</div>
+      <div class="m3">150</div><div class="sublabel">Mes 3</div>
+      <div class="m6">400</div><div class="sublabel">Mes 6</div>
+      <div class="m12">1.000</div><div class="sublabel">Mes 12</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Comunidades activas</div>
+      <div class="m3">100</div><div class="sublabel">Mes 3</div>
+      <div class="m6">350</div><div class="sublabel">Mes 6</div>
+      <div class="m12">1.200</div><div class="sublabel">Mes 12</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">MRR</div>
+      <div class="m3">€3K</div><div class="sublabel">Mes 3</div>
+      <div class="m6">€12K</div><div class="sublabel">Mes 6</div>
+      <div class="m12">€45K</div><div class="sublabel">Mes 12</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">LTV : CAC</div>
+      <div class="m3">3:1</div><div class="sublabel">Mes 3</div>
+      <div class="m6">5:1</div><div class="sublabel">Mes 6</div>
+      <div class="m12">8:1</div><div class="sublabel">Mes 12</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-number">11</div>
+    <div class="section-title">Quick Wins — Lo que hacemos esta semana</div>
+    <span class="section-tag">Acción Inmediata</span>
+  </div>
+
+  <div class="qw-grid">
+    <div class="qw-item">
+      <div class="qw-icon auto">🤖</div>
+      <div class="qw-content">
+        <h4>Secuencia de onboarding (30 días)</h4>
+        <p>Configurar los 8 emails del trial con triggers de comportamiento en ActiveCampaign/HubSpot.</p>
+        <span class="who-badge who-auto">Lo hago yo (código)</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon auto">🤖</div>
+      <div class="qw-content">
+        <h4>Página comparativa FincaHub vs Cemmia</h4>
+        <p>Crear landing page en el propio proyecto web con tabla de comparación y CTA.</p>
+        <span class="who-badge who-auto">Lo hago yo (código)</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon auto">🤖</div>
+      <div class="qw-content">
+        <h4>Calculadora de cuotas interactiva</h4>
+        <p>Herramienta web embebida en el blog que calcula el reparto de gastos por coeficiente.</p>
+        <span class="who-badge who-auto">Lo hago yo (código)</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon auto">🤖</div>
+      <div class="qw-content">
+        <h4>Blog + 3 primeros artículos SEO</h4>
+        <p>Crear la estructura del blog en Next.js y los 3 artículos de mayor volumen de búsqueda.</p>
+        <span class="who-badge who-auto">Lo hago yo (código)</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon auto">🤖</div>
+      <div class="qw-content">
+        <h4>Configurar Google Search Console + GA4</h4>
+        <p>Añadir meta tags de verificación y script de Analytics al proyecto web.</p>
+        <span class="who-badge who-hybrid">Tú das acceso, yo configuro</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon manual">👤</div>
+      <div class="qw-content">
+        <h4>Subir a Capterra, G2 y Product Hunt</h4>
+        <p>Crear perfiles en directorios de software. Requiere cuenta con email corporativo y capturas.</p>
+        <span class="who-badge who-manual">Tú (acción externa)</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon manual">👤</div>
+      <div class="qw-content">
+        <h4>Google Business Profile</h4>
+        <p>Crear perfil de empresa verificado. Requiere verificación por carta o teléfono de Google.</p>
+        <span class="who-badge who-manual">Tú (verificación física)</span>
+      </div>
+    </div>
+    <div class="qw-item">
+      <div class="qw-icon manual">👤</div>
+      <div class="qw-content">
+        <h4>Contactar CGCAFE para partnership</h4>
+        <p>Email al Consejo General de Colegios de Administradores de Fincas de España.</p>
+        <span class="who-badge who-manual">Tú (relación comercial)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
