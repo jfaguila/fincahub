@@ -100,7 +100,7 @@ export class AuthService {
         });
 
         // Generate token
-        const token = this.generateToken(result.id, result.email, result.role);
+        const token = this.generateToken(result.id, result.email, result.role, result.communityId);
 
         return {
             user: result,
@@ -122,7 +122,7 @@ export class AuthService {
         }
 
         // Generate token
-        const token = this.generateToken(user.id, user.email, user.role);
+        const token = this.generateToken(user.id, user.email, user.role, user.communityId);
 
         return {
             user: {
@@ -204,8 +204,8 @@ export class AuthService {
         return { message: 'Contraseña actualizada correctamente.' };
     }
 
-    private generateToken(userId: string, email: string, role: string): string {
-        const payload = { sub: userId, email, role };
+    private generateToken(userId: string, email: string, role: string, communityId?: string | null): string {
+        const payload = { sub: userId, email, role, communityId: communityId || null };
         return this.jwtService.sign(payload);
     }
 }
