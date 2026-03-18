@@ -34,3 +34,8 @@ api/prisma/migrations/*.db
 # Next.js
 web/.next/
 web/out/
+
+# Credenciales locales (nunca subir al repo)
+scripts/tami.json
+scripts/.drive-token.json
+scripts/credentials.json
