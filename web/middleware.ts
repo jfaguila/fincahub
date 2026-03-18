@@ -4,6 +4,24 @@ import type { NextRequest } from 'next/server';
 const PUBLIC_ROUTES = ['/', '/privacy', '/terms', '/login', '/register'];
 const PUBLIC_PREFIXES = ['/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml'];
 
+function isTokenExpired(token: string): boolean {
+  try {
+    const base64Payload = token.split('.')[1];
+    if (!base64Payload) return true;
+    const payload = JSON.parse(atob(base64Payload));
+    if (!payload.exp) return false;
+    return Date.now() >= payload.exp * 1000;
+  } catch {
+    return true;
+  }
+}
+
+function clearTokenResponse(redirectUrl: URL): NextResponse {
+  const response = NextResponse.redirect(redirectUrl);
+  response.cookies.set('token', '', { maxAge: 0, path: '/' });
+  return response;
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('token')?.value;
@@ -13,8 +31,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // If user is on login or register and has a token, redirect to dashboard
-  if ((pathname === '/login' || pathname === '/register') && token) {
+  const hasValidToken = token && !isTokenExpired(token);
+
+  // If user is on login or register and has a valid token, redirect to dashboard
+  if ((pathname === '/login' || pathname === '/register') && hasValidToken) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
@@ -23,9 +43,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protected routes: require token
+  // Protected routes: require valid, non-expired token
   if (!token) {
     return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  if (isTokenExpired(token)) {
+    return clearTokenResponse(new URL('/login', request.url));
   }
 
   return NextResponse.next();

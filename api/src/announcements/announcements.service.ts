@@ -61,6 +61,10 @@ export class AnnouncementsService {
         }
     }
 
+    async findById(id: string) {
+        return this.prisma.announcement.findUnique({ where: { id } });
+    }
+
     async deleteAnnouncement(id: string) {
         return this.prisma.announcement.delete({ where: { id } });
     }

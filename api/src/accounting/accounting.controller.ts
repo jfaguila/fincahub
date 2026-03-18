@@ -1,24 +1,49 @@
 import { Controller, Get, Post, Body, Query, UseGuards, Request, Res } from '@nestjs/common';
+import { IsString, MinLength, IsNumber, IsPositive, IsOptional, IsIn, Min, Max } from 'class-validator';
 import { Response } from 'express';
 import { AccountingService } from './accounting.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { AuthRequest } from '../common/auth-request.interface';
 
 export class CreateAccountDto {
+    @IsString()
+    @MinLength(2)
     name: string;
+
+    @IsString()
+    @IsIn(['BANK', 'CASH'])
     type: string;
 }
 
 export class CreateTransactionDto {
+    @IsString()
     accountId: string;
+
+    @IsNumber()
+    @IsPositive()
     amount: number;
+
+    @IsString()
+    @IsIn(['INCOME', 'EXPENSE'])
     type: string;
+
+    @IsString()
+    @MinLength(2)
     category: string;
+
+    @IsOptional()
+    @IsString()
     description?: string;
 }
 
 export class CreateBudgetDto {
+    @IsNumber()
+    @Min(2000)
+    @Max(2100)
     year: number;
+
+    @IsNumber()
+    @IsPositive()
     totalAmount: number;
 }
 

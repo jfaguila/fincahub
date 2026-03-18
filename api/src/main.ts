@@ -6,6 +6,14 @@ import helmet from 'helmet';
 
 // Main entry point - Fincahub API (Stable)
 async function bootstrap() {
+  // Validate required environment variables before starting
+  const required = ['DATABASE_URL', 'JWT_SECRET'];
+  const missing = required.filter((v) => !process.env[v]);
+  if (missing.length > 0) {
+    console.error(`❌ Missing required environment variables: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
   // Security headers

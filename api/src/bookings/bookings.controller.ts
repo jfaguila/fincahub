@@ -1,17 +1,32 @@
-import { Controller, Get, Post, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, Request, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { IsString, MinLength, IsOptional, IsDateString, Matches } from 'class-validator';
 import { BookingsService } from './bookings.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { AuthRequest } from '../common/auth-request.interface';
 
 export class CreateBookingDto {
+    @IsString()
     spaceId: string;
-    date: string; // ISO date
+
+    @IsDateString()
+    date: string;
+
+    @IsString()
+    @Matches(/^\d{2}:\d{2}$/, { message: 'startTime must be HH:MM' })
     startTime: string;
+
+    @IsString()
+    @Matches(/^\d{2}:\d{2}$/, { message: 'endTime must be HH:MM' })
     endTime: string;
 }
 
 export class CreateSpaceDto {
+    @IsString()
+    @MinLength(2)
     name: string;
+
+    @IsOptional()
+    @IsString()
     description?: string;
 }
 
@@ -40,7 +55,13 @@ export class BookingsController {
     }
 
     @Delete(':id')
-    async deleteBooking(@Param('id') id: string) {
+    async deleteBooking(@Param('id') id: string, @Request() req: any) {
+        const booking = await this.bookingsService.findById(id);
+        if (!booking) throw new NotFoundException('Reserva no encontrada');
+        const isAdminOrPresident = ['ADMIN', 'PRESIDENT'].includes(req.user.role);
+        if (!isAdminOrPresident && booking.userId !== req.user.userId) {
+            throw new ForbiddenException('No tienes permiso para cancelar esta reserva');
+        }
         return this.bookingsService.deleteBooking(id);
     }
 

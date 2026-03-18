@@ -20,7 +20,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  community   Community? @relation(fields: [communityId], references: [id])
+  community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
   communityId String?
 
   properties          Property[]
@@ -59,6 +59,8 @@ model Community {
   spaces        Space[]
   announcements Announcement[]
   meetings      Meeting[]
+
+  @@index([subscriptionStatus])
 }
 
 model Property {
@@ -67,7 +69,7 @@ model Property {
   floor       Int
   coefficient Float   @default(1.0) // Coeficiente de participación
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
   owners      User[]
@@ -83,7 +85,7 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  community    Community     @relation(fields: [communityId], references: [id])
+  community    Community     @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId  String
   transactions Transaction[]
 }
@@ -97,8 +99,10 @@ model Transaction {
   date        DateTime        @default(now())
   createdAt   DateTime        @default(now())
 
-  account   Account @relation(fields: [accountId], references: [id])
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
+
+  @@index([date])
 }
 
 model Budget {
@@ -108,7 +112,7 @@ model Budget {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
   @@unique([communityId, year])
@@ -123,11 +127,13 @@ model Incident {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
-  reportedBy   User   @relation(fields: [reportedById], references: [id])
+  reportedBy   User   @relation(fields: [reportedById], references: [id], onDelete: Cascade)
   reportedById String
+
+  @@index([status])
 }
 
 model Document {
@@ -137,11 +143,13 @@ model Document {
   category    String           @default("OTHER") // ACTA, CONTRATO, FACTURA, POLIZA, OTHER
   uploadedAt  DateTime         @default(now())
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
-  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
   uploadedById String
+
+  @@index([uploadedAt])
 }
 
 model Space {
@@ -150,7 +158,7 @@ model Space {
   description String?
   createdAt   DateTime @default(now())
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
   bookings Booking[]
@@ -163,14 +171,16 @@ model Booking {
   endTime   String   // e.g., "20:00"
   createdAt DateTime @default(now())
 
-  space   Space  @relation(fields: [spaceId], references: [id])
+  space   Space  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   spaceId String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
+
+  @@index([date])
 }
 
 model Announcement {
@@ -181,10 +191,10 @@ model Announcement {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
 }
 
@@ -199,10 +209,10 @@ model Meeting {
   status    String   @default("SCHEDULED") // SCHEDULED | COMPLETED | CANCELLED
   createdAt DateTime @default(now())
 
-  community   Community @relation(fields: [communityId], references: [id])
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
 }
 
@@ -214,7 +224,7 @@ model Vote {
   deadline    DateTime
   createdAt   DateTime @default(now())
 
-  community   Community      @relation(fields: [communityId], references: [id])
+  community   Community      @relation(fields: [communityId], references: [id], onDelete: Cascade)
   communityId String
   responses   VoteResponse[]
 }
@@ -224,10 +234,10 @@ model VoteResponse {
   option    String
   createdAt DateTime @default(now())
 
-  vote   Vote   @relation(fields: [voteId], references: [id])
+  vote   Vote   @relation(fields: [voteId], references: [id], onDelete: Cascade)
   voteId String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   @@unique([voteId, userId])

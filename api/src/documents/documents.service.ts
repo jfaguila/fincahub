@@ -49,6 +49,10 @@ export class DocumentsService {
         });
     }
 
+    async findById(id: string) {
+        return this.prisma.document.findUnique({ where: { id } });
+    }
+
     async deleteDocument(documentId: string) {
         return this.prisma.document.delete({
             where: { id: documentId },

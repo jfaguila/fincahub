@@ -25,11 +25,15 @@ export class BillingService {
             where: { paypalSubscriptionId },
             include: {
                 users: {
-                    where: { role: 'ADMIN' },
-                    select: { email: true, name: true },
+                    where: { role: { in: ['ADMIN', 'PRESIDENT'] } },
+                    select: { email: true, name: true, role: true },
                 },
             },
         });
+    }
+
+    async findCommunityBySubscription(subscriptionId: string) {
+        return this.findCommunityByPaypalSubscription(subscriptionId);
     }
 
     async findCommunityByUser(userId: string) {

@@ -25,7 +25,12 @@ export class VotingService {
 
         // Parse options JSON and calculate results
         return votes.map((vote) => {
-            const options = JSON.parse(vote.options) as string[];
+            let options: string[] = [];
+            try {
+                options = JSON.parse(vote.options) as string[];
+            } catch {
+                options = [];
+            }
             const results = options.reduce((acc: Record<string, number>, option: string) => {
                 acc[option] = vote.responses.filter((r) => r.option === option).length;
                 return acc;
@@ -85,7 +90,12 @@ export class VotingService {
         }
 
         // Validate option
-        const options = JSON.parse(vote.options);
+        let options: string[] = [];
+        try {
+            options = JSON.parse(vote.options);
+        } catch {
+            throw new BadRequestException('Vote options are corrupted');
+        }
         if (!options.includes(option)) {
             throw new BadRequestException('Invalid option');
         }

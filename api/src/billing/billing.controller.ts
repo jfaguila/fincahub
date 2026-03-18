@@ -19,7 +19,15 @@ const PAYPAL_BASE = process.env.PAYPAL_MODE === 'sandbox'
     ? 'https://api-m.sandbox.paypal.com'
     : 'https://api-m.paypal.com';
 
+// Cache token to avoid fetching a new one on every request (tokens are valid ~9 hours)
+let cachedToken: string | null = null;
+let tokenExpiresAt = 0;
+
 async function getPaypalAccessToken(): Promise<string> {
+    if (cachedToken && Date.now() < tokenExpiresAt) {
+        return cachedToken;
+    }
+
     const credentials = Buffer.from(
         `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
     ).toString('base64');
@@ -34,7 +42,10 @@ async function getPaypalAccessToken(): Promise<string> {
     });
 
     const data = await res.json() as any;
-    return data.access_token;
+    cachedToken = data.access_token;
+    // Expire 5 minutes early to be safe
+    tokenExpiresAt = Date.now() + (data.expires_in - 300) * 1000;
+    return cachedToken;
 }
 
 @Controller('billing')
@@ -189,6 +200,20 @@ export class BillingController {
             case 'BILLING.SUBSCRIPTION.SUSPENDED':
                 await this.billingService.handleSubscriptionCancelled(resource);
                 break;
+
+            case 'BILLING.SUBSCRIPTION.PAYMENT.FAILED':
+            case 'PAYMENT.SALE.DENIED': {
+                const failedCommunity = await this.billingService.findCommunityBySubscription(resource.id || resource.billing_agreement_id);
+                if (failedCommunity) {
+                    const adminUsers = failedCommunity.users.filter((u: any) =>
+                        ['ADMIN', 'PRESIDENT'].includes(u.role)
+                    );
+                    for (const user of adminUsers) {
+                        await this.mailService.sendPaymentFailed(user.email, user.name);
+                    }
+                }
+                break;
+            }
         }
 
         return { received: true };

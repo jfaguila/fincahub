@@ -98,6 +98,10 @@ export class IncidentsService {
         });
     }
 
+    async findById(id: string) {
+        return this.prisma.incident.findUnique({ where: { id } });
+    }
+
     async deleteIncident(incidentId: string) {
         return this.prisma.incident.delete({
             where: { id: incidentId },

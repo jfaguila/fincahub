@@ -88,6 +88,10 @@ export class BookingsService {
         });
     }
 
+    async findById(id: string) {
+        return this.prisma.booking.findUnique({ where: { id } });
+    }
+
     async deleteBooking(bookingId: string) {
         return this.prisma.booking.delete({
             where: { id: bookingId },

@@ -25,13 +25,9 @@ export class MailService {
                         <h2 style="color: #2563eb;">Bienvenido a FincaHub</h2>
                         <p>Hola <strong>${name}</strong>,</p>
                         <p>Has sido añadido como vecino en la comunidad <strong>${communityName}</strong>.</p>
-                        <p>Tus credenciales de acceso:</p>
-                        <ul>
-                            <li><strong>Email:</strong> ${email}</li>
-                            <li><strong>Contraseña temporal:</strong> password123</li>
-                        </ul>
-                        <p style="color: #dc2626;">Por favor, cambia tu contraseña al iniciar sesión.</p>
-                        <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/login"
+                        <p>Tu email de acceso: <strong>${email}</strong></p>
+                        <p>Para establecer tu contraseña, usa el enlace de recuperación de contraseña en la pantalla de inicio de sesión.</p>
+                        <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/forgot-password"
                            style="background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 16px;">
                             Iniciar Sesión
                         </a>
@@ -98,7 +94,7 @@ export class MailService {
 
     async sendPasswordReset(email: string, name: string, token: string) {
         if (!this.isConfigured()) {
-            this.logger.warn(`[Mail] No configurado. Reset contraseña para ${email} no enviado. Token: ${token}`);
+            this.logger.warn(`[Mail] No configurado. Reset contraseña para ${email} no enviado.`);
             return;
         }
         const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
@@ -318,6 +314,27 @@ export class MailService {
     }
 
     // ─── /ONBOARDING TRIAL SEQUENCE ───────────────────────────────────────────
+
+    async sendPaymentFailed(email: string, name: string) {
+        if (!this.isConfigured()) return;
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: 'Problema con tu pago - FincaHub',
+                html: this.emailHtml(
+                    'No hemos podido procesar tu pago',
+                    `Hola <strong style="color:#fff;">${name}</strong>,<br><br>
+                    Hemos intentado cobrar tu suscripción a FincaHub pero el pago no se ha podido procesar.<br><br>
+                    Por favor, actualiza tu método de pago en PayPal para evitar interrupciones en el servicio.<br><br>
+                    <span style="color:#6b7280;font-size:13px;">Si crees que es un error, contacta con tu banco o con nosotros respondiendo este email.</span>`,
+                    'Actualizar método de pago', '/dashboard/billing'
+                ),
+            });
+            this.logger.log(`[Mail] Pago fallido notificado a ${email}`);
+        } catch (err) {
+            this.logger.error(`[Mail] Error notificando pago fallido a ${email}:`, err.message);
+        }
+    }
 
     async sendSubscriptionConfirmation(email: string, name: string, plan: string) {
         if (!this.isConfigured()) return;
