@@ -106,6 +106,22 @@ export class AuthService {
         // Send verification email (fire & forget)
         this.mailService.sendEmailVerification(result.email, result.name, emailVerificationToken).catch(() => null);
 
+        // Trial email sequence (only for PRESIDENT = community creator)
+        if (role === 'PRESIDENT') {
+            const userEmail = result.email;
+            const userName = result.name;
+            // Day 1 — immediate welcome
+            setTimeout(() => this.mailService.sendTrialWelcome(userEmail, userName).catch(() => null), 5_000);
+            // Day 3
+            setTimeout(() => this.mailService.sendTrialDay3(userEmail, userName).catch(() => null), 3 * 24 * 60 * 60 * 1000);
+            // Day 7
+            setTimeout(() => this.mailService.sendTrialDay7(userEmail, userName).catch(() => null), 7 * 24 * 60 * 60 * 1000);
+            // Day 14
+            setTimeout(() => this.mailService.sendTrialDay14(userEmail, userName).catch(() => null), 14 * 24 * 60 * 60 * 1000);
+            // Day 25
+            setTimeout(() => this.mailService.sendTrialDay25(userEmail, userName).catch(() => null), 25 * 24 * 60 * 60 * 1000);
+        }
+
         return {
             message: 'Cuenta creada. Por favor revisa tu email y confirma tu dirección para acceder.',
             email: result.email,

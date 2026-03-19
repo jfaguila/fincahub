@@ -374,6 +374,154 @@ export class MailService {
         }
     }
 
+    // ─── Secuencia de onboarding / trial ────────────────────────────────────
+
+    /** Día 1 — Bienvenida al trial */
+    async sendTrialWelcome(email: string, name: string) {
+        if (!this.isConfigured()) return;
+        const url = process.env.FRONTEND_URL || 'https://fincahub.com';
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: `¡Bienvenido a FincaHub, ${name}! Tu prueba gratuita empieza hoy`,
+                html: `
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#fff;padding:40px 32px;border-radius:16px;">
+                  <h1 style="font-size:24px;font-weight:900;color:#fff;">Hola ${name}, bienvenido 👋</h1>
+                  <p style="color:#94a3b8;font-size:15px;line-height:1.6;">Tienes <strong style="color:#fff;">30 días gratis</strong> para descubrir todo lo que FincaHub puede hacer por tu comunidad. Sin tarjeta. Sin compromiso.</p>
+                  <div style="background:#1e293b;border-radius:12px;padding:20px;margin:20px 0;">
+                    <p style="color:#60a5fa;font-weight:700;margin:0 0 12px;">Por dónde empezar:</p>
+                    <ol style="color:#cbd5e1;font-size:14px;line-height:2;padding-left:20px;margin:0;">
+                      <li>Crea tu comunidad y añade las viviendas</li>
+                      <li>Invita a tus vecinos (reciben email automático)</li>
+                      <li>Registra los primeros ingresos y gastos</li>
+                      <li>Prueba a crear una votación o incidencia</li>
+                    </ol>
+                  </div>
+                  <a href="${url}/dashboard" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;font-size:15px;margin-top:8px;">Ir al dashboard →</a>
+                  <p style="color:#4b5563;font-size:12px;margin-top:32px;">FincaHub · <a href="https://fincahub.com" style="color:#60a5fa;">fincahub.com</a></p>
+                </div>`,
+            });
+            this.logger.log(`[Mail] Trial bienvenida enviada a ${email}`);
+        } catch (err) {
+            this.logger.error(`[Mail] Error trial bienvenida ${email}: ${err.message}`);
+        }
+    }
+
+    /** Día 3 — Tip de contabilidad */
+    async sendTrialDay3(email: string, name: string) {
+        if (!this.isConfigured()) return;
+        const url = process.env.FRONTEND_URL || 'https://fincahub.com';
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: `${name}, ¿ya tienes las cuentas de tu comunidad en FincaHub?`,
+                html: `
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#fff;padding:40px 32px;border-radius:16px;">
+                  <h1 style="font-size:22px;font-weight:900;color:#fff;">El módulo más valorado: la contabilidad</h1>
+                  <p style="color:#94a3b8;font-size:15px;line-height:1.6;">El 78% de los presidentes de comunidad dicen que la contabilidad les quita más tiempo. Con FincaHub, esto cambia.</p>
+                  <div style="background:#1e293b;border-radius:12px;padding:20px;margin:20px 0;">
+                    <p style="color:#fff;font-weight:700;margin:0 0 12px;">En menos de 5 minutos puedes:</p>
+                    <ul style="color:#cbd5e1;font-size:14px;line-height:2;padding-left:20px;margin:0;">
+                      <li>Registrar ingresos y gastos con categorías</li>
+                      <li>Ver el balance en tiempo real</li>
+                      <li>Generar remesa SEPA para cobrar cuotas automáticamente</li>
+                      <li>Detectar morosos con un vistazo</li>
+                    </ul>
+                  </div>
+                  <a href="${url}/dashboard/accounts" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;font-size:15px;">Probar la contabilidad →</a>
+                  <p style="color:#4b5563;font-size:12px;margin-top:32px;">FincaHub · <a href="${url}/blog/cuentas-comunidad-vecinos" style="color:#60a5fa;">Lee nuestra guía de contabilidad →</a></p>
+                </div>`,
+            });
+        } catch (err) {
+            this.logger.error(`[Mail] Error trial día 3 ${email}: ${err.message}`);
+        }
+    }
+
+    /** Día 7 — Votaciones y juntas */
+    async sendTrialDay7(email: string, name: string) {
+        if (!this.isConfigured()) return;
+        const url = process.env.FRONTEND_URL || 'https://fincahub.com';
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: `¿Sabías que puedes hacer juntas de vecinos online con FincaHub?`,
+                html: `
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#fff;padding:40px 32px;border-radius:16px;">
+                  <h1 style="font-size:22px;font-weight:900;color:#fff;">Sin reuniones presenciales interminables</h1>
+                  <p style="color:#94a3b8;font-size:15px;line-height:1.6;">Las votaciones online de FincaHub son 100% legales según la LPH reformada. Los vecinos votan desde el móvil en segundos.</p>
+                  <div style="background:#1e293b;border-radius:12px;padding:20px;margin:20px 0;">
+                    <p style="color:#a78bfa;font-weight:700;margin:0 0 8px;">¿Cómo funciona?</p>
+                    <p style="color:#cbd5e1;font-size:14px;line-height:1.6;margin:0;">1. Crea la votación con las opciones → 2. Los vecinos reciben email y votan → 3. El resultado se registra automáticamente en el acta</p>
+                  </div>
+                  <a href="${url}/dashboard/voting" style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;font-size:15px;">Crear mi primera votación →</a>
+                  <p style="color:#4b5563;font-size:12px;margin-top:32px;"><a href="${url}/blog/votaciones-online-comunidad" style="color:#60a5fa;">¿Son legales las votaciones online? Lee el artículo →</a></p>
+                </div>`,
+            });
+        } catch (err) {
+            this.logger.error(`[Mail] Error trial día 7 ${email}: ${err.message}`);
+        }
+    }
+
+    /** Día 14 — Morosos y SEPA */
+    async sendTrialDay14(email: string, name: string) {
+        if (!this.isConfigured()) return;
+        const url = process.env.FRONTEND_URL || 'https://fincahub.com';
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: `${name}, ¿tienes vecinos morosos? FincaHub los detecta automáticamente`,
+                html: `
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#fff;padding:40px 32px;border-radius:16px;">
+                  <h1 style="font-size:22px;font-weight:900;color:#fff;">Deja de perseguir a los morosos</h1>
+                  <p style="color:#94a3b8;font-size:15px;line-height:1.6;">El 15% de los propietarios tiene algún recibo impagado. Con FincaHub, los detectas en segundos y generas la carta de reclamación en un clic.</p>
+                  <div style="background:#1e293b;border-radius:12px;padding:20px;margin:20px 0;">
+                    <p style="color:#f87171;font-weight:700;margin:0 0 12px;">Herramientas anti-morosidad incluidas:</p>
+                    <ul style="color:#cbd5e1;font-size:14px;line-height:2;padding-left:20px;margin:0;">
+                      <li>Detección automática de impagos</li>
+                      <li>Carta de reclamación formal en PDF</li>
+                      <li>Remesa SEPA para cobro domiciliado</li>
+                      <li>Historial completo de deuda por propietario</li>
+                    </ul>
+                  </div>
+                  <a href="${url}/dashboard/neighbors" style="display:inline-block;background:linear-gradient(135deg,#dc2626,#b45309);color:#fff;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;font-size:15px;">Ver mis vecinos →</a>
+                  <p style="color:#4b5563;font-size:12px;margin-top:32px;"><a href="${url}/blog/cobrar-morosos-comunidad" style="color:#60a5fa;">Guía completa: cómo cobrar a morosos →</a></p>
+                </div>`,
+            });
+        } catch (err) {
+            this.logger.error(`[Mail] Error trial día 14 ${email}: ${err.message}`);
+        }
+    }
+
+    /** Día 25 — Urgencia fin de trial */
+    async sendTrialDay25(email: string, name: string) {
+        if (!this.isConfigured()) return;
+        const url = process.env.FRONTEND_URL || 'https://fincahub.com';
+        try {
+            await this.mailerService.sendMail({
+                to: email,
+                subject: `⚠️ ${name}, tu prueba gratuita termina en 5 días`,
+                html: `
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#fff;padding:40px 32px;border-radius:16px;">
+                  <h1 style="font-size:22px;font-weight:900;color:#fff;">Solo te quedan 5 días de prueba gratuita</h1>
+                  <p style="color:#94a3b8;font-size:15px;line-height:1.6;">No pierdas tus datos ni el acceso de tus vecinos. Continúa con FincaHub desde <strong style="color:#fff;">14,99€/mes</strong>.</p>
+                  <div style="background:#1e293b;border-radius:12px;padding:20px;margin:20px 0;">
+                    <p style="color:#fbbf24;font-weight:700;margin:0 0 12px;">¿Qué pierdes si no continúas?</p>
+                    <ul style="color:#cbd5e1;font-size:14px;line-height:2;padding-left:20px;margin:0;">
+                      <li>Acceso a tus cuentas y transacciones</li>
+                      <li>El historial de incidencias</li>
+                      <li>Las actas y documentos subidos</li>
+                      <li>El acceso de tus vecinos al portal</li>
+                    </ul>
+                  </div>
+                  <a href="${url}/dashboard/billing" style="display:inline-block;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;font-size:15px;">Continuar con FincaHub →</a>
+                  <p style="color:#4b5563;font-size:12px;margin-top:24px;">¿Tienes dudas? Responde a este email y te ayudamos.</p>
+                </div>`,
+            });
+        } catch (err) {
+            this.logger.error(`[Mail] Error trial día 25 ${email}: ${err.message}`);
+        }
+    }
+
     async sendSubscriptionConfirmation(email: string, name: string, plan: string) {
         if (!this.isConfigured()) return;
         try {

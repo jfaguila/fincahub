@@ -19,6 +19,7 @@ import { MailModule } from './mail/mail.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { BackupModule } from './backup/backup.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
+import { LeadsModule } from './leads/leads.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { OnboardingModule } from './onboarding/onboarding.module';
     NotificationsModule,
     BackupModule,
     OnboardingModule,
+    LeadsModule,
   ],
   controllers: [AppController],
   providers: [
