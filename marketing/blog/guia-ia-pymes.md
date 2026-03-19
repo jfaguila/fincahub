@@ -65,7 +65,7 @@ Imaginemos un despacho de abogados con 3 profesionales:
 - Ticket medio por cliente: 450€
 - **Pérdida mensual estimada: 10.800€**
 
-¿Cuánto cuesta un asistente IA? 149€/mes.
+¿Cuánto cuesta un asistente IA? Desde 57€/mes (Chatbot Web) hasta 147€/mes (Pack Cobertura Total con voz + WhatsApp).
 
 El ROI se explica solo.
 
@@ -217,7 +217,7 @@ Con estos datos, en el mes 2 ya puedes optimizar para mejorar los resultados.
 
 ### "Es demasiado caro para mi negocio"
 
-El plan de entrada de asistencia.io cuesta 149€/mes. Si tu ticket medio es de 200€ y el asistente capta 2 clientes adicionales al mes que antes perdías, ya tienes ROI positivo. Y eso sin contar el tiempo ahorrado.
+El plan de entrada de asistencia.io cuesta desde 57€/mes (Chatbot Web). Si tu ticket medio es de 200€ y el asistente capta 2 clientes adicionales al mes que antes perdías, ya tienes ROI positivo. Y eso sin contar el tiempo ahorrado.
 
 ### "Mis clientes prefieren hablar con personas"
 
@@ -241,13 +241,24 @@ Fantástico. En ese caso, el asistente te ayuda a ser más selectivo: filtra los
 
 Aquí un resumen honesto de la inversión:
 
-| Plan | Precio | Ideal para |
-|------|--------|-----------|
-| **Starter** | 149€/mes | 1 chatbot, hasta 500 conv/mes, 1 canal |
-| **Profesional** | 299€/mes | Chatbot + voz, hasta 2.000 conv/mes, CRM |
-| **Enterprise** | Desde 500€/mes | Solución a medida, múltiples canales y procesos |
+| Producto | Setup (pago único) | Mensualidad | Ideal para |
+|----------|-------------------|-------------|-----------|
+| **🌐 Chatbot Web** | 397€ | 57€/mes | Negocios con web que quieren captar visitantes (2.500 interacciones/mes) |
+| **💬 Asistente WhatsApp** | 597€ | 67€/mes | Negocios que reciben muchos mensajes por WhatsApp (1.500 conv/mes) |
+| **📞 Recepcionista Virtual** | 897€ | 97€/mes | Negocios que pierden llamadas (100 min/mes, agenda citas) |
+| **📞💬 Pack Cobertura Total** | 1.297€ | 147€/mes | Cobertura absoluta: voz + WhatsApp integrado (ahorro de 197€) |
 
-**Oferta de lanzamiento actual:** Setup gratuito + primer mes sin coste para los primeros clientes.
+**Comparativa de costes:**
+
+| Tipo de contratación | Coste mensual aprox. | Disponibilidad |
+|----------------------|---------------------|----------------|
+| Recepcionista humana (jornada completa) | ~1.200€ - 1.500€ | 8h/día (L-V) |
+| Teleoperadora externa (servicio 24h) | ~400€ - 600€ | Limitado |
+| **Solución asistencia.io** | **Desde 57€/mes** | **24/7 sin descansos** |
+
+Tu ahorro anual estimado: superior al 85%.
+
+🛡️ **Garantía total:** Si no estás satisfecho durante el primer mes, te devolvemos tu dinero. Sin letra pequeña.
 
 Sin permanencia. Cancelación libre.
 

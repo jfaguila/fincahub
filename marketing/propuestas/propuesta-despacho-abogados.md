@@ -51,20 +51,30 @@ Basado en implementaciones similares en despachos de [X] abogados:
 
 ## 4. INVERSIÓN
 
-### Plan recomendado: [Starter / Profesional]
+### Plan recomendado: [Elegir uno de los siguientes]
+
+**Opciones disponibles:**
+
+| Producto | Setup (pago único) | Mensualidad |
+|----------|-------------------|-------------|
+| 📞💬 Pack Cobertura Total (Voz + WhatsApp) | 1.297€ | 147€/mes |
+| 📞 Recepcionista Virtual | 897€ | 97€/mes |
+| 💬 Asistente WhatsApp | 597€ | 67€/mes |
+| 🌐 Chatbot Web | 397€ | 57€/mes |
 
 | Concepto | Importe |
 |----------|---------|
-| Setup e implementación | ~~800 €~~ **GRATIS** (oferta lanzamiento) |
+| Setup e implementación | **[setup del producto elegido] €** (oferta lanzamiento: GRATIS para los primeros 5 clientes) |
 | Primer mes | **SIN COSTE** (período de prueba) |
-| Precio mensual desde mes 2 | **[149 / 299] €/mes** |
+| Precio mensual desde mes 2 | **[mensualidad del producto elegido] €/mes** |
 | Permanencia | **Ninguna — cancelación libre** |
 
-**Plan elegido incluye:**
-- [Listar las features específicas del plan elegido]
+**Todos los planes incluyen:**
+- Configuración profesional personalizada
 - Soporte durante implementación
 - Formación de 1h para el equipo
 - Ajustes sin coste durante los primeros 30 días
+- 🛡️ Garantía de devolución el primer mes
 
 ---
 

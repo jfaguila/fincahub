@@ -96,7 +96,7 @@ const emailSequence = [
     day: "Día 8",
     subject: "Oferta exclusiva para despachos de Granada (5 plazas)",
     preview:
-      "Setup e implementación GRATIS + primer mes sin coste + precio especial 149€/mes. Solo 5 plazas disponibles.",
+      "Setup e implementación GRATIS + primer mes sin coste. Recepcionista Virtual desde 97€/mes o Pack Completo desde 147€/mes. Solo 5 plazas disponibles.",
   },
 ];
 
@@ -271,8 +271,7 @@ export default function AbogadosPage() {
             <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
               <p className="font-bold text-amber-800 mb-2">⚡ Oferta de lanzamiento — Solo 5 plazas</p>
               <p className="text-amber-700 text-sm mb-4">
-                Setup e implementación GRATIS (valor 800€) + Primer mes sin coste + 149€/mes (en
-                lugar de 299€)
+                Setup e implementación GRATIS + Primer mes sin coste. Recepcionista Virtual: 97€/mes | Pack Completo (Voz + WhatsApp): 147€/mes
               </p>
               <Link
                 href="/contacto#demo"
@@ -295,7 +294,7 @@ export default function AbogadosPage() {
             {[
               {
                 q: "Es muy caro para mi despacho",
-                a: '¿Cuánto cobras por hora? Si el asistente ahorra 15h/semana de trabajo administrativo a 20€/h, son 1.200€/mes de ahorro. El plan Starter cuesta 149€. El ROI es de 8x desde el primer mes. Y si en 30 días no ves resultados: cancelación libre, sin coste.',
+                a: '¿Cuánto cobras por hora? Si el asistente ahorra 15h/semana de trabajo administrativo a 20€/h, son 1.200€/mes de ahorro. La Recepcionista Virtual cuesta 97€/mes. El ROI es de 12x desde el primer mes. Y si en 30 días no ves resultados: cancelación libre, sin coste.',
               },
               {
                 q: "¿El asistente entenderá los términos jurídicos?",
