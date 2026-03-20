@@ -41,7 +41,7 @@ export class LeadsController {
 
   @Post('chat')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ short: { limit: 5, ttl: 60000 }, long: { limit: 30, ttl: 60000 } })
+  @Throttle({ short: { limit: 20, ttl: 60000 }, long: { limit: 100, ttl: 60000 } })
   async chat(@Body() dto: ChatDto) {
     const reply = await this.leadsService.chat(dto.message, dto.history ?? []);
     return { reply };

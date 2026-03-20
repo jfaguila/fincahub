@@ -49,6 +49,9 @@ export default function ChatWidget() {
         }),
       });
       const data = await res.json();
+      if (!res.ok || !data.reply) {
+        throw new Error(data.message || 'Error del servidor');
+      }
       setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
     } catch {
       setMessages([...newMessages, {
