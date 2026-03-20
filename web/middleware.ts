@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const PUBLIC_ROUTES = ['/', '/privacy', '/terms', '/login', '/register'];
-const PUBLIC_PREFIXES = ['/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml'];
+const PUBLIC_PREFIXES = ['/_next/', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/blog', '/calculadora', '/comparativa'];
 
 function isTokenExpired(token: string): boolean {
   try {
