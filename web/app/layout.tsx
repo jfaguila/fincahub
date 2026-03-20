@@ -136,19 +136,8 @@ export default function RootLayout({
             __html: `function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"b0757668377c082e18bf956e229995be"})});`,
           }}
         />
-        {/* Google Analytics 4 — reemplaza G-XXXXXXXXXX con tu Measurement ID */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX',{page_path:window.location.pathname});`,
-          }}
-        />
-        {/* Crisp Chat — reemplaza XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX con tu website_id */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.$crisp=[];window.CRISP_WEBSITE_ID="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX";(function(){var d=document,s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`,
-          }}
-        />
+        {/* Google Analytics 4 — añadir cuando tengas tu Measurement ID (G-XXXXXXXXXX) */}
+        {/* Crisp Chat — añadir cuando tengas tu website_id de crisp.chat */}
       </head>
       <body className="antialiased">
         {children}
