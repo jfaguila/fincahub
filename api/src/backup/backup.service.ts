@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { execFile } from 'child_process';
+import { Cron } from '@nestjs/schedule';
+import { execFile, spawn } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -36,11 +36,36 @@ export class BackupService {
         const filePath = path.join(this.backupDir, fileName);
 
         try {
-            // Use pg_dump + gzip
-            await execFileAsync('sh', [
-                '-c',
-                `pg_dump "${databaseUrl}" | gzip > "${filePath}"`,
-            ]);
+            // Parse DATABASE_URL to avoid shell injection
+            const dbUrl = new URL(databaseUrl);
+            const dbName = dbUrl.pathname.slice(1);
+
+            // Use pg_dump with explicit args (no shell -c), pipe to gzip separately
+            await new Promise<void>((resolve, reject) => {
+                const pgDump = spawn('pg_dump', [
+                    '--host', dbUrl.hostname,
+                    '--port', dbUrl.port || '5432',
+                    '--username', dbUrl.username,
+                    '--dbname', dbName,
+                    '--no-password',
+                ], {
+                    env: { ...process.env, PGPASSWORD: decodeURIComponent(dbUrl.password) },
+                });
+
+                const gzip = spawn('gzip', [], { stdio: ['pipe', 'pipe', 'pipe'] });
+                const output = fs.createWriteStream(filePath);
+
+                pgDump.stdout.pipe(gzip.stdin);
+                gzip.stdout.pipe(output);
+
+                pgDump.stderr.on('data', (d) => this.logger.warn(`[Backup] pg_dump: ${d}`));
+                gzip.stderr.on('data', (d) => this.logger.warn(`[Backup] gzip: ${d}`));
+
+                output.on('finish', resolve);
+                pgDump.on('error', reject);
+                gzip.on('error', reject);
+                output.on('error', reject);
+            });
 
             const stats = fs.statSync(filePath);
             const sizeMb = (stats.size / 1024 / 1024).toFixed(2);

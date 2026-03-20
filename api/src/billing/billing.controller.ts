@@ -1,4 +1,5 @@
-import { Controller, Post, Body, UseGuards, Request, Get, Headers, RawBodyRequest, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Get, Headers, RawBodyRequest, Req, Res, HttpStatus } from '@nestjs/common';
+import type { Response } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { BillingService } from './billing.service';
 import { MailService } from '../mail/mail.service';
@@ -137,9 +138,10 @@ export class BillingController {
     async handleWebhook(
         @Headers() headers: Record<string, string>,
         @Req() req: RawBodyRequest<Request>,
+        @Res() res: Response,
     ) {
         if (!process.env.PAYPAL_CLIENT_ID) {
-            return { received: true, demo: true };
+            return res.status(HttpStatus.OK).json({ received: true, demo: true });
         }
 
         const rawBody = req.rawBody ? req.rawBody.toString() : JSON.stringify(req.body);
@@ -168,10 +170,10 @@ export class BillingController {
 
                 const verifyData = await verifyRes.json() as any;
                 if (verifyData.verification_status !== 'SUCCESS') {
-                    return { error: 'Webhook signature verification failed' };
+                    return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Webhook signature verification failed' });
                 }
             } catch {
-                return { error: 'Webhook verification error' };
+                return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Webhook verification error' });
             }
         }
 
@@ -216,6 +218,6 @@ export class BillingController {
             }
         }
 
-        return { received: true };
+        return res.status(HttpStatus.OK).json({ received: true });
     }
 }

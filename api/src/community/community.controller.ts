@@ -1,25 +1,66 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, UploadedFile, UseInterceptors, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { IsString, MinLength, MaxLength, IsNumber, IsOptional, IsEmail, Min, Max } from 'class-validator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as XLSX from 'xlsx';
 import { CommunityService } from './community.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { AuthRequest } from '../common/auth-request.interface';
 
+function requireCommunity(req: any): string {
+    if (!req.user?.communityId) throw new UnauthorizedException('No asociado a ninguna comunidad');
+    return req.user.communityId;
+}
+
 export class CreatePropertyDto {
+    @IsString()
+    @MinLength(1)
+    @MaxLength(20)
     unit: string;
+
+    @IsNumber()
+    @Min(0)
+    @Max(999)
     floor: number;
+
+    @IsOptional()
+    @IsNumber({ maxDecimalPlaces: 4 })
+    @Min(0.0001)
+    @Max(100)
     coefficient?: number;
 }
 
 export class UpdatePropertyDto {
+    @IsOptional()
+    @IsString()
+    @MaxLength(20)
     unit?: string;
+
+    @IsOptional()
+    @IsNumber()
+    @Min(0)
+    @Max(999)
     floor?: number;
+
+    @IsOptional()
+    @IsNumber({ maxDecimalPlaces: 4 })
+    @Min(0.0001)
+    @Max(100)
     coefficient?: number;
 }
 
 export class UpdateNeighborDto {
+    @IsOptional()
+    @IsString()
+    @MinLength(2)
+    @MaxLength(100)
     name?: string;
+
+    @IsOptional()
+    @IsEmail()
     email?: string;
+
+    @IsOptional()
+    @IsString()
     role?: string;
 }
 
@@ -31,13 +72,13 @@ export class CommunityController {
     // Properties
     @Get('properties')
     async getProperties(@Request() req: any) {
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
         return this.communityService.getProperties(communityId);
     }
 
     @Post('properties')
     async createProperty(@Body() dto: CreatePropertyDto, @Request() req: any) {
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
         return this.communityService.createProperty(communityId, dto.unit, dto.floor, dto.coefficient);
     }
 
@@ -49,13 +90,13 @@ export class CommunityController {
     // Neighbors
     @Get('neighbors')
     async getNeighbors(@Request() req: any) {
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
         return this.communityService.getNeighbors(communityId);
     }
 
     @Post('neighbors')
     async createNeighbor(@Body() body: { name: string; email: string; role?: string; unit?: string; iban?: string }, @Request() req: any) {
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
         return this.communityService.createNeighbor(communityId, body.name, body.email, body.role, body.unit, body.iban);
     }
 
@@ -73,7 +114,7 @@ export class CommunityController {
     @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 5 * 1024 * 1024 } }))
     async importNeighbors(@UploadedFile() file: Express.Multer.File, @Request() req: any) {
         if (!file) throw new BadRequestException('No se ha subido ningún archivo.');
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
 
         const workbook = XLSX.read(file.buffer, { type: 'buffer' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -100,13 +141,13 @@ export class CommunityController {
     // Community info
     @Get()
     async getCommunity(@Request() req: any) {
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
         return this.communityService.getCommunity(communityId);
     }
 
     @Put()
     async updateCommunity(@Body() data: any, @Request() req: any) {
-        const communityId = req.user.communityId || 'default';
+        const communityId = requireCommunity(req);
         return this.communityService.updateCommunity(communityId, data);
     }
 }

@@ -31,8 +31,9 @@ export class AuthService {
         const trialEndsAt = new Date();
         trialEndsAt.setDate(trialEndsAt.getDate() + 30);
 
-        // Generate email verification token
+        // Generate email verification token (expires in 24 hours)
         const emailVerificationToken = crypto.randomBytes(32).toString('hex');
+        const emailVerificationExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
         // Use a transaction to create user, community, default account, and default spaces
         const result = await this.prisma.$transaction(async (tx) => {
@@ -44,6 +45,7 @@ export class AuthService {
                     name,
                     role,
                     emailVerificationToken,
+                    emailVerificationExpiresAt,
                 },
                 select: {
                     id: true,
@@ -129,12 +131,21 @@ export class AuthService {
     }
 
     async verifyEmail(token: string) {
+        if (!token || token.length < 32) {
+            throw new BadRequestException('El enlace de verificación no es válido.');
+        }
+
         const user = await this.prisma.user.findUnique({
             where: { emailVerificationToken: token },
         });
 
         if (!user) {
             throw new BadRequestException('El enlace de verificación no es válido o ya fue usado.');
+        }
+
+        // Check expiry
+        if (user.emailVerificationExpiresAt && user.emailVerificationExpiresAt < new Date()) {
+            throw new BadRequestException('El enlace de verificación ha expirado. Solicita uno nuevo.');
         }
 
         await this.prisma.user.update({
@@ -164,9 +175,10 @@ export class AuthService {
         }
 
         const newToken = crypto.randomBytes(32).toString('hex');
+        const newExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
         await this.prisma.user.update({
             where: { id: user.id },
-            data: { emailVerificationToken: newToken },
+            data: { emailVerificationToken: newToken, emailVerificationExpiresAt: newExpiry },
         });
 
         this.mailService.sendEmailVerification(user.email, user.name, newToken).catch(() => null);
