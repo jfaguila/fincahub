@@ -211,6 +211,7 @@ export default function Home() {
             <a href="#pricing" className="hover:text-white transition-colors">Precios</a>
             <a href="#testimonials" className="hover:text-white transition-colors">Opiniones</a>
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+            <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
           </nav>
           <div className="flex gap-3 items-center">
             <Link href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
