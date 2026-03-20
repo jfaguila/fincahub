@@ -1,3 +1,6 @@
-const PRODUCTION_API = 'https://fincahub-production-d498.up.railway.app';
+const PRODUCTION_API = 'https://api.fincahub.com';
+const DEV_API = 'http://localhost:3001';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || PRODUCTION_API;
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.NODE_ENV === 'production' ? PRODUCTION_API : DEV_API);

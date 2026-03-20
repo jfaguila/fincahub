@@ -97,7 +97,7 @@ const FAQS = [
   },
   {
     q: '¿Mis datos están seguros?',
-    a: 'Sí. Servidores en Europa, copias de seguridad diarias y cifrado SSL. Cumplimos el RGPD.',
+    a: 'Sí. Servidores en Europa, copias de seguridad diarias y cifrado SSL. Cumplimos el RGPD al 100%.',
   },
   {
     q: '¿Puedo cambiar de plan en cualquier momento?',
@@ -107,13 +107,97 @@ const FAQS = [
     q: '¿Hay contrato de permanencia?',
     a: 'Ninguno. Cancelas cuando quieras, sin penalizaciones ni letra pequeña.',
   },
+  {
+    q: '¿Cuántos vecinos puede tener mi comunidad?',
+    a: 'El plan Básico admite hasta 30 viviendas, el Profesional hasta 100 y el de Urbanización es ilimitado. Puedes cambiar de plan en cualquier momento.',
+  },
+  {
+    q: '¿Puedo importar los datos de mi comunidad?',
+    a: 'Sí. Fincahub permite importar vecinos, propiedades y datos contables desde Excel. El proceso tarda menos de 5 minutos.',
+  },
+  {
+    q: '¿Los vecinos también tienen acceso?',
+    a: 'Sí. Cada vecino tiene su portal propio donde puede ver sus recibos, votar en juntas, hacer reservas y reportar incidencias.',
+  },
+  {
+    q: '¿Se pueden generar remesas SEPA para cobrar las cuotas?',
+    a: 'Sí. Fincahub genera automáticamente los ficheros XML de remesa SEPA (ISO 20022) listos para subir a cualquier banco español.',
+  },
+  {
+    q: '¿Qué es el plan Urbanización?',
+    a: 'Es el plan para grandes comunidades con múltiples bloques o portales, viviendas ilimitadas e informes avanzados. Incluye soporte telefónico prioritario.',
+  },
 ];
+
+const BLOG_ARTICLES = [
+  { slug: 'convocar-junta-propietarios', title: 'Cómo convocar una junta de propietarios', category: 'Legal' },
+  { slug: 'derramas-comunidad-propietarios', title: 'Derramas: cómo calcularlas y cobrarlas', category: 'Contabilidad' },
+  { slug: 'cobrar-morosos-comunidad', title: 'Cómo cobrar a vecinos morosos', category: 'Legal' },
+  { slug: 'presupuesto-anual-comunidad-vecinos', title: 'Presupuesto anual de comunidad', category: 'Contabilidad' },
+  { slug: 'ruidos-vecinos-comunidad', title: 'Ruidos de vecinos: cómo reclamar', category: 'Convivencia' },
+  { slug: 'votaciones-online-comunidad', title: 'Votaciones online: ¿son legales?', category: 'Legal' },
+];
+
+const schemaOrg = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: 'FincaHub',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      description: 'Software SaaS para la gestión integral de comunidades de propietarios en España.',
+      url: 'https://fincahub.com',
+      offers: {
+        '@type': 'Offer',
+        price: '14.99',
+        priceCurrency: 'EUR',
+        priceValidUntil: '2027-01-01',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        reviewCount: '2400',
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQS.map((faq) => ({
+        '@type': 'Question',
+        name: faq.q,
+        acceptedAnswer: { '@type': 'Answer', text: faq.a },
+      })),
+    },
+    {
+      '@type': 'Organization',
+      name: 'FincaHub',
+      url: 'https://fincahub.com',
+      logo: 'https://fincahub.com/hero.png',
+      contactPoint: { '@type': 'ContactPoint', email: 'hola@fincahub.com', contactType: 'customer service' },
+    },
+  ],
+};
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [email, setEmail] = useState('');
+  const [leadSent, setLeadSent] = useState(false);
+
+  async function handleLead(e: React.FormEvent) {
+    e.preventDefault();
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+    } catch {}
+    setLeadSent(true);
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
 
       {/* Navbar */}
       <header className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/10">
@@ -303,6 +387,65 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Blog / Recursos */}
+        <section className="py-24">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4">Guías para presidentes de comunidad</h2>
+              <p className="text-gray-400 max-w-xl mx-auto">Artículos prácticos escritos por expertos en gestión de comunidades y derecho de propiedad horizontal.</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-10">
+              {BLOG_ARTICLES.map((a) => (
+                <Link key={a.slug} href={`/blog/${a.slug}`} className="group p-5 rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all">
+                  <span className="text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full">{a.category}</span>
+                  <p className="text-sm font-semibold text-white mt-3 group-hover:text-blue-300 transition leading-snug">{a.title} →</p>
+                </Link>
+              ))}
+            </div>
+            <div className="text-center">
+              <Link href="/blog" className="text-blue-400 hover:text-blue-300 text-sm font-semibold transition">Ver todos los artículos →</Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Lead capture / Newsletter */}
+        <section className="py-16 bg-white/[0.02] border-y border-white/5">
+          <div className="container mx-auto px-6 max-w-2xl text-center">
+            <div className="inline-block bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest">
+              Guía gratuita
+            </div>
+            <h2 className="text-3xl font-bold mb-3">
+              Descarga la guía del Presidente de Comunidad 2026
+            </h2>
+            <p className="text-gray-400 mb-8">
+              Todo lo que necesitas saber sobre contabilidad, morosos, juntas y ley de propiedad horizontal. PDF gratuito, sin spam.
+            </p>
+            {leadSent ? (
+              <div className="bg-green-500/10 border border-green-500/30 text-green-400 rounded-xl px-8 py-6 font-semibold">
+                ¡Gracias! Te enviamos la guía por email en los próximos minutos.
+              </div>
+            ) : (
+              <form onSubmit={handleLead} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                  className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-sm"
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-sm transition shrink-0"
+                >
+                  Enviarme la guía
+                </button>
+              </form>
+            )}
+            <p className="text-gray-600 text-xs mt-3">Sin spam. Puedes darte de baja en cualquier momento.</p>
           </div>
         </section>
 

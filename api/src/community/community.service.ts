@@ -48,7 +48,8 @@ export class CommunityService {
                 throw new BadRequestException('El usuario con este email ya existe.');
             }
 
-            const hashedPassword = await bcrypt.hash('password123', 10);
+            const temporaryPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4).toUpperCase();
+            const hashedPassword = await bcrypt.hash(temporaryPassword, 10);
 
             const user = await this.prisma.user.create({
                 data: {
@@ -57,7 +58,7 @@ export class CommunityService {
                     name,
                     role,
                     communityId,
-                    iban, // Save IBAN
+                    iban,
                 },
             });
 
@@ -86,11 +87,11 @@ export class CommunityService {
             if (communityId) {
                 const community = await this.prisma.community.findUnique({ where: { id: communityId } });
                 if (community) {
-                    this.mailService.sendWelcome(email, name, community.name).catch(() => null);
+                    this.mailService.sendWelcome(email, name, community.name, temporaryPassword).catch(() => null);
                 }
             }
 
-            return user;
+            return { ...user, temporaryPassword };
         } catch (error) {
             console.error('[CreateNeighbor] Critical Error:', error);
             throw error;
@@ -162,7 +163,7 @@ export class CommunityService {
         });
     }
 
-    async updateCommunity(communityId: string, data: { name?: string; address?: string; bankAccount?: string }) {
+    async updateCommunity(communityId: string, data: { name?: string; address?: string; postalCode?: string; city?: string; province?: string; cif?: string; bankAccount?: string }) {
         return this.prisma.community.update({
             where: { id: communityId },
             data,

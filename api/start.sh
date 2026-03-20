@@ -9,7 +9,8 @@ echo "Running prisma db push..."
 if npx prisma db push --skip-generate; then
   echo "Prisma db push OK"
 else
-  echo "WARNING: prisma db push failed (exit code $?). Continuing anyway..."
+  echo "ERROR: prisma db push failed. Aborting startup."
+  exit 1
 fi
 
 echo "Running prisma seed (skips if already seeded)..."

@@ -31,15 +31,19 @@ export class AuthService {
         const trialEndsAt = new Date();
         trialEndsAt.setDate(trialEndsAt.getDate() + 30);
 
+        // Generate email verification token
+        const emailVerificationToken = crypto.randomBytes(32).toString('hex');
+
         // Use a transaction to create user, community, default account, and default spaces
         const result = await this.prisma.$transaction(async (tx) => {
-            // Create user
+            // Create user (unverified)
             const user = await tx.user.create({
                 data: {
                     email,
                     password: hashedPassword,
                     name,
                     role,
+                    emailVerificationToken,
                 },
                 select: {
                     id: true,
@@ -99,13 +103,75 @@ export class AuthService {
             return user;
         });
 
-        // Generate token
-        const token = this.generateToken(result.id, result.email, result.role, result.communityId);
+        // Send verification email (fire & forget)
+        this.mailService.sendEmailVerification(result.email, result.name, emailVerificationToken).catch(() => null);
+
+        // Trial email sequence (only for PRESIDENT = community creator)
+        if (role === 'PRESIDENT') {
+            const userEmail = result.email;
+            const userName = result.name;
+            // Day 1 — immediate welcome
+            setTimeout(() => this.mailService.sendTrialWelcome(userEmail, userName).catch(() => null), 5_000);
+            // Day 3
+            setTimeout(() => this.mailService.sendTrialDay3(userEmail, userName).catch(() => null), 3 * 24 * 60 * 60 * 1000);
+            // Day 7
+            setTimeout(() => this.mailService.sendTrialDay7(userEmail, userName).catch(() => null), 7 * 24 * 60 * 60 * 1000);
+            // Day 14
+            setTimeout(() => this.mailService.sendTrialDay14(userEmail, userName).catch(() => null), 14 * 24 * 60 * 60 * 1000);
+            // Day 25
+            setTimeout(() => this.mailService.sendTrialDay25(userEmail, userName).catch(() => null), 25 * 24 * 60 * 60 * 1000);
+        }
 
         return {
-            user: result,
-            token,
+            message: 'Cuenta creada. Por favor revisa tu email y confirma tu dirección para acceder.',
+            email: result.email,
         };
+    }
+
+    async verifyEmail(token: string) {
+        const user = await this.prisma.user.findUnique({
+            where: { emailVerificationToken: token },
+        });
+
+        if (!user) {
+            throw new BadRequestException('El enlace de verificación no es válido o ya fue usado.');
+        }
+
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: { emailVerified: true, emailVerificationToken: null },
+        });
+
+        const jwt = this.generateToken(user.id, user.email, user.role, user.communityId);
+
+        return {
+            token: jwt,
+            user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                communityId: user.communityId,
+            },
+        };
+    }
+
+    async resendVerification(email: string) {
+        const user = await this.prisma.user.findUnique({ where: { email } });
+        // Always return success to avoid email enumeration
+        if (!user || user.emailVerified) {
+            return { message: 'Si el email existe y no está verificado, recibirás un nuevo enlace.' };
+        }
+
+        const newToken = crypto.randomBytes(32).toString('hex');
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: { emailVerificationToken: newToken },
+        });
+
+        this.mailService.sendEmailVerification(user.email, user.name, newToken).catch(() => null);
+
+        return { message: 'Si el email existe y no está verificado, recibirás un nuevo enlace.' };
     }
 
     async login(email: string, password: string) {

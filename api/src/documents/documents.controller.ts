@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards, Request, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { IsString, MinLength, IsOptional, IsBoolean, IsIn } from 'class-validator';
 import { DocumentsService } from './documents.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthRequest } from '../common/auth-request.interface';
@@ -6,9 +7,21 @@ import { AccountingService } from '../accounting/accounting.service';
 import { AiProcessorService } from './ai-processor.service';
 
 export class UploadDocumentDto {
+    @IsString()
+    @MinLength(1)
     name: string;
-    url: string;
+
+    @IsOptional()
+    @IsString()
+    url?: string;
+
+    @IsString()
+    @IsIn(['ACTA', 'CONTRATO', 'FACTURA', 'POLIZA', 'OTHER'])
     category: string;
+
+    @IsOptional()
+    @IsBoolean()
+    isSmartUpload?: boolean;
 }
 
 @Controller('documents')
@@ -27,11 +40,11 @@ export class DocumentsController {
     }
 
     @Post('upload')
-    async uploadDocument(@Body() body: { name: string; category: string; isSmartUpload?: boolean }, @Request() req: any) {
+    async uploadDocument(@Body() body: { name: string; url?: string; category: string; isSmartUpload?: boolean }, @Request() req: any) {
         const communityId = req.user.communityId || 'default';
         const userId = req.user.userId;
 
-        const doc = await this.documentsService.uploadDocument(communityId, userId, body.name, 'http://placeholder.url', body.category);
+        const doc = await this.documentsService.uploadDocument(communityId, userId, body.name, body.url || '', body.category);
 
         let autoCreatedTransaction = null;
         let aiAnalysis = null;
@@ -65,7 +78,13 @@ export class DocumentsController {
     }
 
     @Delete(':id')
-    async deleteDocument(@Param('id') id: string) {
+    async deleteDocument(@Param('id') id: string, @Request() req: any) {
+        const document = await this.documentsService.findById(id);
+        if (!document) throw new NotFoundException('Documento no encontrado');
+        const isAdminOrPresident = ['ADMIN', 'PRESIDENT'].includes(req.user.role);
+        if (!isAdminOrPresident && document.uploadedById !== req.user.userId) {
+            throw new ForbiddenException('No tienes permiso para eliminar este documento');
+        }
         return this.documentsService.deleteDocument(id);
     }
 }
