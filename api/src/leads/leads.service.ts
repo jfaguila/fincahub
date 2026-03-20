@@ -70,7 +70,7 @@ export class LeadsService {
       return (response.content[0] as { type: string; text: string }).text;
     } catch (err) {
       this.logger.error(`[Chat] Error calling Claude: ${err.message}`);
-      return 'Lo siento, ahora mismo no puedo responder. Puedes contactarnos en hola@fincahub.com o registrarte directamente en fincahub.com/register para el trial gratuito.';
+      return 'Lo siento, ahora mismo no puedo responder. Puedes contactarnos en info@fincahub.com o registrarte directamente en fincahub.com/register para el trial gratuito.';
     }
   }
 

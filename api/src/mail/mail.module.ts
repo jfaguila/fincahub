@@ -16,7 +16,7 @@ import { MailService } from './mail.service';
                         : undefined,
                 },
                 defaults: {
-                    from: process.env.MAIL_FROM || '"FincaHub" <hola@fincahub.com>',
+                    from: process.env.MAIL_FROM || '"FincaHub" <info@fincahub.com>',
                 },
             }),
         }),

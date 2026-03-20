@@ -165,7 +165,7 @@ export default function SoftwareAdministradorFincas() {
           Empezar gratis →
         </Link>
         <p className="text-slate-600 text-sm mt-4">
-          ¿Tienes más de 50 comunidades? <a href="mailto:hola@fincahub.com" className="text-blue-400 hover:underline">Contáctanos para un plan personalizado</a>
+          ¿Tienes más de 50 comunidades? <a href="mailto:info@fincahub.com" className="text-blue-400 hover:underline">Contáctanos para un plan personalizado</a>
         </p>
       </section>
 
@@ -174,7 +174,7 @@ export default function SoftwareAdministradorFincas() {
         <Link href="/terms" className="hover:text-white mr-4 transition">Términos</Link>
         <Link href="/comparativa" className="hover:text-white mr-4 transition">Comparativa</Link>
         <Link href="/blog" className="hover:text-white transition">Blog</Link>
-        <p className="mt-2">© 2026 FincaHub S.L. · <a href="mailto:hola@fincahub.com" className="hover:text-white transition">hola@fincahub.com</a></p>
+        <p className="mt-2">© 2026 FincaHub S.L. · <a href="mailto:info@fincahub.com" className="hover:text-white transition">info@fincahub.com</a></p>
       </footer>
     </div>
   );
