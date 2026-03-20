@@ -52,25 +52,50 @@ export class SuperAdminController {
         const communities = await this.prisma.community.findMany({
             include: {
                 _count: {
-                    select: { users: true, incidents: true },
+                    select: { users: true, incidents: true, accounts: true, documents: true },
+                },
+                users: {
+                    where: { role: { in: ['PRESIDENT', 'ADMIN'] } },
+                    select: { email: true, name: true, role: true },
+                    take: 1,
+                },
+                incidents: {
+                    where: { status: { in: ['OPEN', 'IN_PROGRESS'] } },
+                    select: { id: true },
                 },
             },
             orderBy: { createdAt: 'desc' },
         });
 
-        return communities.map(c => ({
-            id: c.id,
-            name: c.name,
-            city: c.city,
-            province: c.province,
-            subscriptionStatus: c.subscriptionStatus,
-            subscriptionPlan: c.subscriptionPlan,
-            trialEndsAt: c.trialEndsAt,
-            subscriptionEndsAt: c.subscriptionEndsAt,
-            createdAt: c.createdAt,
-            userCount: c._count.users,
-            incidentCount: c._count.incidents,
-        }));
+        return communities.map(c => {
+            const president = c.users[0] || null;
+            const openIncidents = c.incidents.length;
+
+            // Health score: green = active users + accounts; yellow = partial; red = empty
+            const hasUsers = c._count.users > 1;
+            const hasAccounts = c._count.accounts > 0;
+            const hasDocs = c._count.documents > 0;
+            const health = hasUsers && hasAccounts ? 'green'
+                : hasUsers || hasAccounts || hasDocs ? 'yellow'
+                : 'red';
+
+            return {
+                id: c.id,
+                name: c.name,
+                city: c.city,
+                province: c.province,
+                subscriptionStatus: c.subscriptionStatus,
+                subscriptionPlan: c.subscriptionPlan,
+                trialEndsAt: c.trialEndsAt,
+                subscriptionEndsAt: c.subscriptionEndsAt,
+                createdAt: c.createdAt,
+                userCount: c._count.users,
+                openIncidents,
+                health,
+                presidentEmail: president?.email || null,
+                presidentName: president?.name || null,
+            };
+        });
     }
 
     @Patch('communities/:id/status')

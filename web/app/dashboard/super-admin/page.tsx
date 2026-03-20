@@ -25,20 +25,29 @@ interface Community {
   subscriptionEndsAt: string | null;
   createdAt: string;
   userCount: number;
-  incidentCount: number;
+  openIncidents: number;
+  health: 'green' | 'yellow' | 'red';
+  presidentEmail: string | null;
+  presidentName: string | null;
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  active:    { label: 'Activo',    color: 'bg-green-500/15 text-green-400 border-green-500/30' },
-  trial:     { label: 'Trial',     color: 'bg-blue-500/15 text-blue-400 border-blue-500/30' },
-  canceled:  { label: 'Cancelado', color: 'bg-red-500/15 text-red-400 border-red-500/30' },
-  past_due:  { label: 'Impago',    color: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30' },
+  active:   { label: 'Activo',    color: 'bg-green-500/15 text-green-400 border-green-500/30' },
+  trial:    { label: 'Trial',     color: 'bg-blue-500/15 text-blue-400 border-blue-500/30' },
+  canceled: { label: 'Cancelado', color: 'bg-red-500/15 text-red-400 border-red-500/30' },
+  past_due: { label: 'Impago',    color: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30' },
 };
 
 const PLAN_LABELS: Record<string, string> = {
   basic: 'Basic — 29€',
   professional: 'Pro — 59€',
   urbanization: 'Urbanización — 99€',
+};
+
+const HEALTH: Record<string, { dot: string; label: string }> = {
+  green:  { dot: 'bg-green-400',  label: 'Activo' },
+  yellow: { dot: 'bg-yellow-400', label: 'Parcial' },
+  red:    { dot: 'bg-red-400',    label: 'Sin configurar' },
 };
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -104,7 +113,8 @@ export default function SuperAdminPage() {
 
   const filtered = communities.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
-    (c.city || '').toLowerCase().includes(search.toLowerCase())
+    (c.city || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.presidentEmail || '').toLowerCase().includes(search.toLowerCase())
   );
 
   const trialExpiringSoon = communities.filter(c => {
@@ -113,6 +123,8 @@ export default function SuperAdminPage() {
     return daysLeft <= 5 && daysLeft >= 0;
   });
 
+  const withOpenIncidents = communities.filter(c => c.openIncidents > 0);
+
   return (
     <div className="space-y-8 max-w-6xl">
       <div className="flex items-center justify-between">
@@ -120,10 +132,7 @@ export default function SuperAdminPage() {
           <h2 className="text-3xl font-bold tracking-tight text-white">Super Admin</h2>
           <p className="text-gray-400 mt-1">Gestiona todas las comunidades de FincaHub</p>
         </div>
-        <button
-          onClick={fetchData}
-          className="text-sm text-blue-400 hover:underline"
-        >
+        <button onClick={fetchData} className="text-sm text-blue-400 hover:underline">
           Actualizar
         </button>
       </div>
@@ -142,23 +151,56 @@ export default function SuperAdminPage() {
         </div>
       )}
 
-      {/* Alert: trials expiring soon */}
+      {/* Alerts */}
       {trialExpiringSoon.length > 0 && (
         <div className="rounded-xl bg-yellow-500/10 border border-yellow-500/30 p-4">
           <p className="text-yellow-400 font-medium text-sm mb-2">
-            Trials a punto de expirar ({trialExpiringSoon.length})
+            Trials a punto de expirar ({trialExpiringSoon.length}) — contacta antes de que caduquen
           </p>
           <ul className="space-y-1">
             {trialExpiringSoon.map(c => {
               const daysLeft = Math.ceil((new Date(c.trialEndsAt!).getTime() - Date.now()) / 86400000);
               return (
-                <li key={c.id} className="text-yellow-300/80 text-xs flex items-center gap-2">
+                <li key={c.id} className="text-yellow-300/80 text-xs flex items-center gap-3">
                   <span className="font-medium">{c.name}</span>
                   <span className="text-yellow-500">—</span>
                   <span>expira en {daysLeft} día{daysLeft !== 1 ? 's' : ''}</span>
+                  {c.presidentEmail && (
+                    <a
+                      href={`mailto:${c.presidentEmail}?subject=Tu prueba de FincaHub termina pronto&body=Hola ${c.presidentName || ''},`}
+                      className="text-blue-400 hover:underline"
+                    >
+                      Escribir →
+                    </a>
+                  )}
                 </li>
               );
             })}
+          </ul>
+        </div>
+      )}
+
+      {withOpenIncidents.length > 0 && (
+        <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+          <p className="text-red-400 font-medium text-sm mb-2">
+            Comunidades con incidencias abiertas ({withOpenIncidents.length})
+          </p>
+          <ul className="space-y-1">
+            {withOpenIncidents.map(c => (
+              <li key={c.id} className="text-red-300/80 text-xs flex items-center gap-3">
+                <span className="font-medium">{c.name}</span>
+                <span className="text-red-500">—</span>
+                <span>{c.openIncidents} incidencia{c.openIncidents !== 1 ? 's' : ''} abiertas</span>
+                {c.presidentEmail && (
+                  <a
+                    href={`mailto:${c.presidentEmail}?subject=Incidencias abiertas en FincaHub`}
+                    className="text-blue-400 hover:underline"
+                  >
+                    Contactar →
+                  </a>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
       )}
@@ -168,7 +210,7 @@ export default function SuperAdminPage() {
         <div className="p-4 border-b border-white/10 flex items-center gap-3">
           <input
             type="text"
-            placeholder="Buscar por nombre o ciudad..."
+            placeholder="Buscar por nombre, ciudad o email..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="flex-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -185,18 +227,21 @@ export default function SuperAdminPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/10 text-gray-400 text-xs uppercase tracking-wider">
+                  <th className="text-left px-4 py-3">Salud</th>
                   <th className="text-left px-4 py-3">Comunidad</th>
+                  <th className="text-left px-4 py-3">Contacto</th>
                   <th className="text-left px-4 py-3">Plan</th>
                   <th className="text-left px-4 py-3">Estado</th>
                   <th className="text-left px-4 py-3">Usuarios</th>
                   <th className="text-left px-4 py-3">Trial / Fin</th>
                   <th className="text-left px-4 py-3">Alta</th>
-                  <th className="text-left px-4 py-3">Acciones</th>
+                  <th className="text-left px-4 py-3">Cambiar estado</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filtered.map(c => {
                   const statusInfo = STATUS_LABELS[c.subscriptionStatus] || { label: c.subscriptionStatus, color: 'bg-gray-500/15 text-gray-400' };
+                  const healthInfo = HEALTH[c.health] || HEALTH.red;
                   const trialDate = c.trialEndsAt ? new Date(c.trialEndsAt).toLocaleDateString('es-ES') : null;
                   const endDate = c.subscriptionEndsAt ? new Date(c.subscriptionEndsAt).toLocaleDateString('es-ES') : null;
                   const createdDate = new Date(c.createdAt).toLocaleDateString('es-ES');
@@ -204,10 +249,31 @@ export default function SuperAdminPage() {
                   return (
                     <tr key={c.id} className="hover:bg-white/3 transition-colors">
                       <td className="px-4 py-3">
+                        <div className="flex items-center gap-1.5" title={healthInfo.label}>
+                          <span className={`w-2 h-2 rounded-full ${healthInfo.dot}`} />
+                          {c.openIncidents > 0 && (
+                            <span className="text-red-400 text-xs font-bold">{c.openIncidents}!</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
                         <p className="text-white font-medium">{c.name}</p>
                         {c.city && <p className="text-gray-500 text-xs">{c.city}{c.province ? `, ${c.province}` : ''}</p>}
                       </td>
-                      <td className="px-4 py-3 text-gray-300">
+                      <td className="px-4 py-3">
+                        {c.presidentEmail ? (
+                          <a
+                            href={`mailto:${c.presidentEmail}?subject=FincaHub — ${c.name}`}
+                            className="text-blue-400 hover:underline text-xs"
+                            title={c.presidentEmail}
+                          >
+                            {c.presidentName || c.presidentEmail}
+                          </a>
+                        ) : (
+                          <span className="text-gray-600 text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-gray-300 text-xs">
                         {c.subscriptionPlan ? PLAN_LABELS[c.subscriptionPlan] || c.subscriptionPlan : '—'}
                       </td>
                       <td className="px-4 py-3">
@@ -215,12 +281,7 @@ export default function SuperAdminPage() {
                           {statusInfo.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-300">
-                        {c.userCount}
-                        {c.incidentCount > 0 && (
-                          <span className="ml-2 text-gray-500 text-xs">{c.incidentCount} incid.</span>
-                        )}
-                      </td>
+                      <td className="px-4 py-3 text-gray-300 text-xs">{c.userCount}</td>
                       <td className="px-4 py-3 text-gray-400 text-xs">
                         {trialDate ? `Trial: ${trialDate}` : endDate ? `Fin: ${endDate}` : '—'}
                       </td>

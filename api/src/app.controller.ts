@@ -72,8 +72,11 @@ export class AppController {
                 backups: {
                     ok: dbOk,
                     dir: process.env.BACKUP_DIR || '/tmp/fincahub-backups',
+                    s3: this.backupService.isS3Configured(),
                     recent: this.backupService.listBackups().slice(0, 3),
-                    message: dbOk ? 'Backup diario a las 03:00 UTC' : '❌ Sin DB, sin backups',
+                    message: dbOk
+                        ? `Backup diario a las 03:00 UTC${this.backupService.isS3Configured() ? ' → S3 configurado' : ' — solo local (configura AWS_S3_BUCKET para S3)'}`
+                        : '❌ Sin DB, sin backups',
                 },
             },
             nextSteps: [
