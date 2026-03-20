@@ -14,6 +14,9 @@ import { MailService } from './mail.service';
                     auth: process.env.MAIL_USER
                         ? { user: process.env.MAIL_USER, pass: process.env.MAIL_PASS || '' }
                         : undefined,
+                    connectionTimeout: 10000,  // 10s
+                    greetingTimeout: 10000,    // 10s
+                    socketTimeout: 15000,      // 15s
                 },
                 defaults: {
                     from: process.env.MAIL_FROM || '"FincaHub" <info@fincahub.com>',
