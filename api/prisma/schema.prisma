@@ -17,9 +17,10 @@ model User {
   name                   String
   role                   String   @default("NEIGHBOR") // ADMIN, PRESIDENT, NEIGHBOR
   iban                   String?  // IBAN for SEPA payments
-  emailVerified          Boolean  @default(false)
-  emailVerificationToken String?  @unique
-  createdAt              DateTime @default(now())
+  emailVerified              Boolean   @default(false)
+  emailVerificationToken     String?   @unique
+  emailVerificationExpiresAt DateTime?
+  createdAt                  DateTime  @default(now())
   updatedAt              DateTime @updatedAt
 
   community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
@@ -34,6 +35,8 @@ model User {
   meetings            Meeting[]
   notifications       Notification[]
   passwordResetTokens PasswordResetToken[]
+
+  @@index([communityId])
 }
 
 model Community {
@@ -109,6 +112,8 @@ model Transaction {
   accountId String
 
   @@index([date])
+  @@index([accountId])
+  @@index([type])
 }
 
 model Budget {
@@ -187,6 +192,8 @@ model Booking {
   communityId String
 
   @@index([date])
+  @@index([spaceId])
+  @@index([communityId])
 }
 
 model Announcement {

@@ -130,10 +130,10 @@ export class MailService {
         }
     }
 
-    async sendPasswordReset(email: string, name: string, token: string) {
+    async sendPasswordReset(email: string, name: string, token: string): Promise<boolean> {
         if (!this.isConfigured()) {
             this.logger.warn(`[Mail] No configurado. Reset contraseña para ${email} no enviado.`);
-            return;
+            return false;
         }
         const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
         try {
@@ -155,8 +155,10 @@ export class MailService {
                 `,
             });
             this.logger.log(`[Mail] Reset de contraseña enviado a ${email}`);
+            return true;
         } catch (err) {
             this.logger.error(`[Mail] Error enviando reset a ${email}:`, err.message);
+            throw err;
         }
     }
 

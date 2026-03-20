@@ -94,7 +94,13 @@ export class AppController {
 
         const target = body.to || req.user.email;
         try {
-            await this.mailService.sendPasswordReset(target, 'Admin', 'test-token-12345');
+            const sent = await this.mailService.sendPasswordReset(target, 'Admin', 'test-token-12345');
+            if (sent === false) {
+                return {
+                    ok: false,
+                    message: 'Email no configurado. Añade MAIL_USER y MAIL_PASS en Railway.',
+                };
+            }
             return {
                 ok: true,
                 message: `Email de prueba enviado a ${target}. Revisa tu bandeja.`,
@@ -102,7 +108,7 @@ export class AppController {
         } catch (err: any) {
             return {
                 ok: false,
-                message: `Error al enviar: ${err.message}. Verifica MAIL_USER y MAIL_PASS.`,
+                message: `Error al enviar: ${err.message}. Verifica MAIL_USER y MAIL_PASS en Railway.`,
             };
         }
     }

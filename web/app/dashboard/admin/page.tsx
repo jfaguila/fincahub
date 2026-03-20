@@ -56,17 +56,25 @@ export default function AdminPage() {
   const sendTestEmail = async () => {
     setSendingEmail(true);
     setEmailResult(null);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/admin/test-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ to: testEmail }),
+        signal: controller.signal,
       });
       setEmailResult(await res.json());
-    } catch {
-      setEmailResult({ ok: false, message: 'Error de conexión' });
+    } catch (err: any) {
+      if (err?.name === 'AbortError') {
+        setEmailResult({ ok: false, message: 'Tiempo de espera agotado. Verifica la configuración SMTP en Railway.' });
+      } else {
+        setEmailResult({ ok: false, message: 'Error de conexión' });
+      }
     } finally {
+      clearTimeout(timeout);
       setSendingEmail(false);
     }
   };

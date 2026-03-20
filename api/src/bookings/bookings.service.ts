@@ -30,40 +30,28 @@ export class BookingsService {
         startTime: string,
         endTime: string,
     ) {
-        // Check for conflicts (simplified - in production you'd check full overlap logic)
-        const existingBooking = await this.prisma.booking.findFirst({
-            where: {
-                spaceId,
-                date,
-                OR: [
-                    {
-                        startTime: { lte: startTime },
-                        endTime: { gt: startTime },
-                    },
-                    {
-                        startTime: { lt: endTime },
-                        endTime: { gte: endTime },
-                    },
-                ],
-            },
-        });
+        // Atomic check-and-create to prevent race conditions
+        return this.prisma.$transaction(async (tx) => {
+            const existingBooking = await tx.booking.findFirst({
+                where: {
+                    spaceId,
+                    date,
+                    OR: [
+                        { startTime: { lte: startTime }, endTime: { gt: startTime } },
+                        { startTime: { lt: endTime }, endTime: { gte: endTime } },
+                        { startTime: { gte: startTime }, endTime: { lte: endTime } },
+                    ],
+                },
+            });
 
-        if (existingBooking) {
-            throw new BadRequestException('Time slot already booked');
-        }
+            if (existingBooking) {
+                throw new BadRequestException('Franja horaria ya reservada');
+            }
 
-        return this.prisma.booking.create({
-            data: {
-                communityId,
-                userId,
-                spaceId,
-                date,
-                startTime,
-                endTime,
-            },
-            include: {
-                space: true,
-            },
+            return tx.booking.create({
+                data: { communityId, userId, spaceId, date, startTime, endTime },
+                include: { space: true },
+            });
         });
     }
 

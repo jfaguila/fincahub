@@ -38,25 +38,20 @@ export class AccountingService {
 
     async createTransaction(communityId: string, accountId: string, amount: number, type: string, category: string, description: string) {
         const account = await this.prisma.account.findUnique({ where: { id: accountId } });
-        if (!account) throw new Error('Account not found');
+        if (!account || account.communityId !== communityId) throw new Error('Account not found');
 
-        // Create tx
-        const tx = await this.prisma.transaction.create({
-            data: {
-                accountId,
-                amount,
-                type,
-                category,
-                description,
-            },
-        });
-
-        // Update balance
         const balanceChange = type === 'INCOME' ? amount : -amount;
-        await this.prisma.account.update({
-            where: { id: accountId },
-            data: { balance: { increment: balanceChange } },
-        });
+
+        // Atomic: create transaction + update balance together
+        const [tx] = await this.prisma.$transaction([
+            this.prisma.transaction.create({
+                data: { accountId, amount, type, category, description },
+            }),
+            this.prisma.account.update({
+                where: { id: accountId },
+                data: { balance: { increment: balanceChange } },
+            }),
+        ]);
 
         return tx;
     }
@@ -145,9 +140,19 @@ export class AccountingService {
         return debtors;
     }
 
-    // --- SEPA XML GENERATION Mock ---
+    // --- SEPA XML GENERATION ---
     async generateSepaXml(communityId: string, concept: string, amountPerNeighbor: number) {
-        // 1. Get neighbors with IBAN
+        // 1. Get community bank account
+        const community = await this.prisma.community.findUnique({
+            where: { id: communityId },
+            select: { name: true, bankAccount: true, cif: true },
+        });
+
+        if (!community?.bankAccount) {
+            throw new Error('La comunidad no tiene IBAN registrado. Configúralo en Ajustes de Comunidad.');
+        }
+
+        // 2. Get neighbors with IBAN
         const neighbors = await this.prisma.user.findMany({
             where: { communityId, iban: { not: null } },
             select: { name: true, iban: true }
@@ -160,8 +165,9 @@ export class AccountingService {
         const totalAmount = neighbors.length * amountPerNeighbor;
         const msgId = `MSG-${Date.now()}`;
         const createDate = new Date().toISOString();
+        const communityName = community.name.substring(0, 70).replace(/[<>&'"]/g, '');
 
-        // 2. Build XML string (Simplified ISO 20022 PAIN.008 format)
+        // 3. Build XML string (ISO 20022 PAIN.008 format)
         let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02">
   <CstmrDrctDbtInitn>
@@ -171,7 +177,7 @@ export class AccountingService {
         <NbOfTxs>${neighbors.length}</NbOfTxs>
         <CtrlSum>${totalAmount.toFixed(2)}</CtrlSum>
         <InitgPty>
-            <Nm>FINCAHUB COMMUNITY</Nm>
+            <Nm>${communityName}</Nm>
         </InitgPty>
     </GrpHdr>
     <PmtInf>
@@ -186,13 +192,13 @@ export class AccountingService {
         </PmtTpInf>
         <ReqdColltnDt>${new Date().toISOString().split('T')[0]}</ReqdColltnDt>
         <Cdtr>
-            <Nm>FINCAHUB ADMIN</Nm>
+            <Nm>${communityName}</Nm>
         </Cdtr>
         <CdtrAcct>
-            <Id><IBAN>ES9800000000000000000000</IBAN></Id>
+            <Id><IBAN>${community.bankAccount.replace(/\s/g, '').toUpperCase()}</IBAN></Id>
         </CdtrAcct>
         <CdtrAgt>
-            <FinInstnId><BIC>TESTBICXXX</BIC></FinInstnId>
+            <FinInstnId><Othr><Id>NOTPROVIDED</Id></Othr></FinInstnId>
         </CdtrAgt>
 `;
 

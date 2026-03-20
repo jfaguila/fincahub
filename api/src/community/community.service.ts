@@ -91,9 +91,16 @@ export class CommunityService {
                 }
             }
 
-            return { ...user, temporaryPassword };
-        } catch (error) {
-            console.error('[CreateNeighbor] Critical Error:', error);
+            // Never return temporaryPassword in the response — it was sent by email
+            return {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                communityId: user.communityId,
+                createdAt: user.createdAt,
+            };
+        } catch (error: any) {
             throw error;
         }
     }
