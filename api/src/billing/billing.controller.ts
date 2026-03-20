@@ -45,7 +45,7 @@ async function getPaypalAccessToken(): Promise<string> {
     cachedToken = data.access_token;
     // Expire 5 minutes early to be safe
     tokenExpiresAt = Date.now() + (data.expires_in - 300) * 1000;
-    return cachedToken;
+    return cachedToken!;
 }
 
 @Controller('billing')
