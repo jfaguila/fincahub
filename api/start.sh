@@ -6,7 +6,7 @@ echo "PORT: $PORT"
 echo "DATABASE_URL set: $([ -n "$DATABASE_URL" ] && echo YES || echo NO)"
 
 echo "Running prisma db push..."
-if npx prisma db push --skip-generate; then
+if npx prisma db push --skip-generate --accept-data-loss; then
   echo "Prisma db push OK"
 else
   echo "ERROR: prisma db push failed. Aborting startup."
