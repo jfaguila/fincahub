@@ -50,18 +50,25 @@ function handleLogout() {
 }
 
 function AdminLink() {
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [role, setRole] = useState('');
     useEffect(() => {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            setIsAdmin(['ADMIN', 'PRESIDENT'].includes(user.role));
+            setRole(user.role || '');
         } catch { /* ignore */ }
     }, []);
-    if (!isAdmin) return null;
+    if (!['ADMIN', 'PRESIDENT'].includes(role)) return null;
     return (
-        <Link href="/dashboard/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <span>⚙️</span> Administración
-        </Link>
+        <>
+            <Link href="/dashboard/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                <span>⚙️</span> Administración
+            </Link>
+            {role === 'ADMIN' && (
+                <Link href="/dashboard/super-admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                    <span>🛡️</span> Super Admin
+                </Link>
+            )}
+        </>
     );
 }
 

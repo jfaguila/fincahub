@@ -20,6 +20,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { BackupModule } from './backup/backup.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 import { LeadsModule } from './leads/leads.module';
+import { SuperAdminModule } from './super-admin/super-admin.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { LeadsModule } from './leads/leads.module';
     BackupModule,
     OnboardingModule,
     LeadsModule,
+    SuperAdminModule,
   ],
   controllers: [AppController],
   providers: [
