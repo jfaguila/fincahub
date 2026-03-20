@@ -93,7 +93,7 @@ export default function BillingPage() {
       if (data.url) {
         window.location.href = data.url;
       } else if (data.demo) {
-        alert('Sistema de pagos PayPal en configuracion. Contacta con hola@fincahub.com');
+        alert('Sistema de pagos PayPal en configuracion. Contacta con info@fincahub.com');
       }
     } catch {
       alert('Error al procesar el pago. Intentalo de nuevo.');

@@ -53,7 +53,7 @@ export default function ChatWidget() {
     } catch {
       setMessages([...newMessages, {
         role: 'assistant',
-        content: 'Lo siento, ha habido un problema. Puedes escribirnos directamente a hola@fincahub.com.',
+        content: 'Lo siento, ha habido un problema. Puedes escribirnos directamente a info@fincahub.com.',
       }]);
     } finally {
       setLoading(false);

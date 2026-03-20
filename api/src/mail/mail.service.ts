@@ -374,39 +374,6 @@ export class MailService {
         }
     }
 
-    // ─── Secuencia de onboarding / trial ────────────────────────────────────
-
-    /** Día 1 — Bienvenida al trial */
-    async sendTrialWelcome(email: string, name: string) {
-        if (!this.isConfigured()) return;
-        const url = process.env.FRONTEND_URL || 'https://fincahub.com';
-        try {
-            await this.mailerService.sendMail({
-                to: email,
-                subject: `¡Bienvenido a FincaHub, ${name}! Tu prueba gratuita empieza hoy`,
-                html: `
-                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#fff;padding:40px 32px;border-radius:16px;">
-                  <h1 style="font-size:24px;font-weight:900;color:#fff;">Hola ${name}, bienvenido 👋</h1>
-                  <p style="color:#94a3b8;font-size:15px;line-height:1.6;">Tienes <strong style="color:#fff;">30 días gratis</strong> para descubrir todo lo que FincaHub puede hacer por tu comunidad. Sin tarjeta. Sin compromiso.</p>
-                  <div style="background:#1e293b;border-radius:12px;padding:20px;margin:20px 0;">
-                    <p style="color:#60a5fa;font-weight:700;margin:0 0 12px;">Por dónde empezar:</p>
-                    <ol style="color:#cbd5e1;font-size:14px;line-height:2;padding-left:20px;margin:0;">
-                      <li>Crea tu comunidad y añade las viviendas</li>
-                      <li>Invita a tus vecinos (reciben email automático)</li>
-                      <li>Registra los primeros ingresos y gastos</li>
-                      <li>Prueba a crear una votación o incidencia</li>
-                    </ol>
-                  </div>
-                  <a href="${url}/dashboard" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;font-size:15px;margin-top:8px;">Ir al dashboard →</a>
-                  <p style="color:#4b5563;font-size:12px;margin-top:32px;">FincaHub · <a href="https://fincahub.com" style="color:#60a5fa;">fincahub.com</a></p>
-                </div>`,
-            });
-            this.logger.log(`[Mail] Trial bienvenida enviada a ${email}`);
-        } catch (err) {
-            this.logger.error(`[Mail] Error trial bienvenida ${email}: ${err.message}`);
-        }
-    }
-
     /** Día 3 — Tip de contabilidad */
     async sendTrialDay3(email: string, name: string) {
         if (!this.isConfigured()) return;
