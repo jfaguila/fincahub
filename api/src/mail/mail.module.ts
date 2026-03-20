@@ -14,6 +14,7 @@ import { MailService } from './mail.service';
                     auth: process.env.MAIL_USER
                         ? { user: process.env.MAIL_USER, pass: process.env.MAIL_PASS || '' }
                         : undefined,
+                    family: 4,                 // force IPv4 (Railway IPv6 not supported)
                     connectionTimeout: 10000,  // 10s
                     greetingTimeout: 10000,    // 10s
                     socketTimeout: 15000,      // 15s
