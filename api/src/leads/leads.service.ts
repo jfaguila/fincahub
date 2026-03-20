@@ -1,13 +1,78 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import Anthropic from '@anthropic-ai/sdk';
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://fincahub.com';
+
+const SYSTEM_PROMPT = `Eres el asistente virtual de FincaHub, el software de gestión para comunidades de propietarios en España. Ayudas a presidentes y administradores de fincas a resolver dudas y descubrir cómo FincaHub puede ayudarles.
+
+SOBRE FINCAHUB:
+- SaaS para gestión integral de comunidades de propietarios en España
+- Trial gratuito de 30 días, sin tarjeta de crédito, sin permanencia
+- Web: https://fincahub.com
+
+PLANES Y PRECIOS:
+- Plan Básico: 14,99€/mes — hasta 20 propiedades. Contabilidad, incidencias, anuncios, portal vecino
+- Plan Profesional: 29,99€/mes — hasta 100 propiedades. Todo lo anterior + votaciones, reservas de espacios, juntas/actas, remesas SEPA
+- Plan Urbanización: 59,99€/mes — propiedades ilimitadas. Todo + soporte prioritario y backups diarios
+
+FUNCIONALIDADES PRINCIPALES:
+- Contabilidad transparente: ingresos, gastos, presupuesto anual, liquidaciones por coeficiente
+- Remesas SEPA ISO 20022: cobro domiciliado automático a todos los vecinos
+- Incidencias con fotos y seguimiento de estado
+- Votaciones digitales con plazos y múltiples opciones
+- Reservas de espacios comunes (piscina, pádel, salón de actos...)
+- Tablón de anuncios para la comunidad
+- Juntas y actas digitales
+- Análisis IA de facturas: extrae datos automáticamente y crea transacciones
+- Notificaciones por email a vecinos
+- Panel de administración con estadísticas en tiempo real
+
+INSTRUCCIONES DE COMPORTAMIENTO:
+- Responde siempre en español, tono amigable y cercano, directo y conciso (2-4 frases)
+- Si preguntan sobre gestión de comunidades, da información útil y práctica
+- Si muestran interés o preguntan por precio/funcionalidades, invítales a registrarse gratis
+- Si el usuario da su email, agradécelo y dile que le enviarás información (menciona "email capturado")
+- Nunca digas que eres Claude ni una IA de Anthropic. Eres el asistente de FincaHub
+- No inventes funcionalidades que no estén listadas arriba
+- Si no sabes algo específico de su comunidad, oriéntales a registrarse y probarlo gratis`;
 
 @Injectable()
 export class LeadsService {
   private readonly logger = new Logger(LeadsService.name);
+  private readonly anthropic = process.env.ANTHROPIC_API_KEY
+    ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    : null;
 
   constructor(private readonly mailerService: MailerService) {}
+
+  async chat(message: string, history: Array<{ role: 'user' | 'assistant'; content: string }>) {
+    // Auto-detect email in message and save lead
+    const emailMatch = message.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    if (emailMatch) {
+      this.create(emailMatch[0]).catch(() => {});
+    }
+
+    if (!this.anthropic) {
+      return '¡Hola! Soy el asistente de FincaHub. Puedo ayudarte con dudas sobre gestión de comunidades de propietarios. ¿En qué puedo ayudarte? También puedes registrarte gratis en fincahub.com y probar el software 30 días sin compromiso.';
+    }
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        system: SYSTEM_PROMPT,
+        messages: [
+          ...history.slice(-8).map((m) => ({ role: m.role, content: m.content })),
+          { role: 'user', content: message },
+        ],
+      });
+      return (response.content[0] as { type: string; text: string }).text;
+    } catch (err) {
+      this.logger.error(`[Chat] Error calling Claude: ${err.message}`);
+      return 'Lo siento, ahora mismo no puedo responder. Puedes contactarnos en hola@fincahub.com o registrarte directamente en fincahub.com/register para el trial gratuito.';
+    }
+  }
 
   async create(email: string) {
     this.logger.log(`[Lead] Nuevo lead capturado: ${email}`);
