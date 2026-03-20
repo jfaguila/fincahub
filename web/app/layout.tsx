@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import CookieConsent from "../components/CookieConsent";
+import ChatWidget from "../components/ChatWidget";
 
 export const metadata: Metadata = {
   title: {
@@ -148,6 +149,7 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <CookieConsent />
+        <ChatWidget />
       </body>
     </html>
   );
