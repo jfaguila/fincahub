@@ -50,6 +50,20 @@ async function main() {
 
     console.log('✓ Spaces created');
 
+    // Create super admin (no community, sees everything)
+    await prisma.user.upsert({
+        where: { email: 'info@fincahub.com' },
+        update: {},
+        create: {
+            email: 'info@fincahub.com',
+            password: await bcrypt.hash('FincaHub2026!', 10),
+            name: 'Super Admin',
+            role: 'ADMIN',
+        },
+    });
+
+    console.log('✓ Super admin created');
+
     // Create users
     const president = await prisma.user.create({
         data: {
