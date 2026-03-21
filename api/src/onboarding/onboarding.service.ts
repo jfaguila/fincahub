@@ -27,6 +27,21 @@ export class OnboardingService {
     ) { }
 
     @Cron('0 9 * * *', { timeZone: 'Europe/Madrid' })
+    async expireTrials() {
+        const now = new Date();
+        const result = await this.prisma.community.updateMany({
+            where: {
+                subscriptionStatus: 'trial',
+                trialEndsAt: { lt: now },
+            },
+            data: { subscriptionStatus: 'expired' },
+        });
+        if (result.count > 0) {
+            this.logger.log(`[Onboarding] ${result.count} comunidades marcadas como expiradas.`);
+        }
+    }
+
+    @Cron('5 9 * * *', { timeZone: 'Europe/Madrid' })
     async runDailyOnboardingSequence() {
         this.logger.log('[Onboarding] Iniciando secuencia diaria de onboarding...');
 

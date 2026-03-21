@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { API_URL } from '@/lib/api';
 
 interface BillingStatus {
-  status: 'trial' | 'active' | 'canceled';
+  status: 'trial' | 'active' | 'canceled' | 'expired';
   plan?: string;
   trialEndsAt?: string;
 }
