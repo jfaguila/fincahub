@@ -6,7 +6,23 @@ const prisma = new PrismaClient();
 async function main() {
     console.log('Starting seed...');
 
-    // Skip if already seeded
+    // Always ensure super admin exists (runs even if DB is already seeded)
+    const adminExists = await prisma.user.findUnique({ where: { email: 'info@fincahub.com' } });
+    if (!adminExists) {
+        await prisma.user.create({
+            data: {
+                email: 'info@fincahub.com',
+                password: await bcrypt.hash('FincaHub2026!', 10),
+                name: 'Super Admin',
+                role: 'ADMIN',
+            },
+        });
+        console.log('✓ Super admin created (info@fincahub.com)');
+    } else {
+        console.log('✓ Super admin already exists');
+    }
+
+    // Skip rest if already seeded
     const existing = await prisma.user.findUnique({ where: { email: 'presidente@fincahub.com' } });
     if (existing) {
         console.log('Database already seeded, skipping...');
@@ -49,20 +65,6 @@ async function main() {
     });
 
     console.log('✓ Spaces created');
-
-    // Create super admin (no community, sees everything)
-    await prisma.user.upsert({
-        where: { email: 'info@fincahub.com' },
-        update: {},
-        create: {
-            email: 'info@fincahub.com',
-            password: await bcrypt.hash('FincaHub2026!', 10),
-            name: 'Super Admin',
-            role: 'ADMIN',
-        },
-    });
-
-    console.log('✓ Super admin created');
 
     // Create users
     const president = await prisma.user.create({
