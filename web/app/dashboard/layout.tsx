@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import NotificationBell from "@/components/NotificationBell";
 import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 function UserInfo() {
     const [name, setName] = useState('');
@@ -70,6 +71,54 @@ function AdminLink() {
             )}
         </>
     );
+}
+
+function TrialExpiredWall() {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+            <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-3xl mb-6">
+                🔒
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Tu período de prueba ha expirado</h2>
+            <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md">
+                Han pasado los 30 días de prueba gratuita. Elige un plan para seguir gestionando tu comunidad sin interrupciones.
+            </p>
+            <Link
+                href="/dashboard/billing"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+            >
+                Ver planes y precios
+            </Link>
+        </div>
+    );
+}
+
+function SubscriptionWrapper({ children }: { children: React.ReactNode }) {
+    const [expired, setExpired] = useState(false);
+    const [checked, setChecked] = useState(false);
+
+    useEffect(() => {
+        const user = (() => { try { return JSON.parse(localStorage.getItem('user') || '{}'); } catch { return {}; } })();
+        if (user.role === 'ADMIN') { setChecked(true); return; }
+
+        const token = localStorage.getItem('token');
+        if (!token) { setChecked(true); return; }
+
+        fetch(`${API_URL}/billing/status`, { headers: { Authorization: `Bearer ${token}` } })
+            .then((r) => r.json())
+            .then((data: any) => { if (data.subscriptionStatus === 'expired') setExpired(true); })
+            .catch(() => { /* ignore, don't block on network error */ })
+            .finally(() => setChecked(true));
+    }, []);
+
+    if (!checked) return null;
+
+    // Always allow billing page so they can pay
+    if (expired && typeof window !== 'undefined' && !window.location.pathname.includes('/billing')) {
+        return <TrialExpiredWall />;
+    }
+
+    return <>{children}</>;
 }
 
 export default function DashboardLayout({
@@ -145,7 +194,9 @@ export default function DashboardLayout({
                 </header>
                 <main className="flex-1 p-6 md:p-8">
                     <AuthGuard>
-                        {children}
+                        <SubscriptionWrapper>
+                            {children}
+                        </SubscriptionWrapper>
                     </AuthGuard>
                 </main>
             </div>
