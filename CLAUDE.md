@@ -182,6 +182,33 @@ NEXT_PUBLIC_API_URL=https://api.fincahub.com
 
 ---
 
+## Sesión 2026-03-20 — Resumen de lo trabajado
+
+### Super Admin Panel (COMPLETADO y en producción)
+- **Backend**: nuevo módulo `api/src/super-admin/` con 3 endpoints:
+  - `GET /super-admin/stats` → KPIs globales (total comunidades, activas, trial, MRR estimado)
+  - `GET /super-admin/communities` → lista completa con conteo de usuarios e incidencias
+  - `PATCH /super-admin/communities/:id/status` → cambiar estado de suscripción
+  - Solo accesible con rol `ADMIN` (403 para cualquier otro rol)
+- **Frontend**: `/dashboard/super-admin` con KPI cards, alerta de trials expirando en ≤5 días, tabla buscable con cambio de estado inline
+- **Sidebar**: enlace "Super Admin" visible solo para rol `ADMIN`
+- Mergeado a `main` y desplegado en producción
+
+### Fix Email IPv6 (COMPLETADO y en producción)
+- Error: `connect ENETUNREACH 2607:f8b0:...` — Railway no soporta IPv6 saliente
+- Fix: añadido `family: 4` en `api/src/mail/mail.module.ts` para forzar IPv4
+- Mergeado a `main`
+
+### Próximos pasos acordados
+1. **Marketing y captación de primeros clientes** — esto es lo siguiente a hacer
+   - Canales directos: foros, Facebook grupos, LinkedIn
+   - Google Ads con keywords de alta intención
+   - Contenido SEO en el blog ya existente
+2. Verificar que el email funciona tras el fix de IPv6
+3. Activar PayPal en modo live cuando haya primeros clientes
+
+---
+
 ## Historial de Cambios Importantes
 
 | Commit | Descripción |
